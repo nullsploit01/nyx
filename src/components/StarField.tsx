@@ -1,38 +1,26 @@
 import type { Star } from '../types';
-import { altAzToXYZ } from '../utils';
+import { altAzToXYZ, colorFromCI } from '../utils';
 import * as Astronomy from 'astronomy-engine';
 import { useMemo } from 'react';
 import * as THREE from 'three';
 
 type Props = {
   stars: Star[];
+  latitude: number;
+  longitude: number;
+  elevation: number;
+  date: Date;
 };
 
-function colorFromCI(ci: number) {
-  if (ci < 0) {
-    return new THREE.Color('#9bbcff');
-  }
-
-  if (ci < 0.5) {
-    return new THREE.Color('#cad7ff');
-  }
-
-  if (ci < 1) {
-    return new THREE.Color('#fff4ea');
-  }
-
-  return new THREE.Color('#ffcc99');
-}
-
-export default function StarField({ stars }: Props) {
+const StarField = ({ latitude, longitude, elevation, date, stars }: Props) => {
   const geometry = useMemo(() => {
     const positions: number[] = [];
     const colors: number[] = [];
     const sizes: number[] = [];
 
-    const observer = new Astronomy.Observer(21.1458, 79.0882, 310);
+    const observer = new Astronomy.Observer(latitude, longitude, elevation);
 
-    const time = new Astronomy.AstroTime(new Date());
+    const time = new Astronomy.AstroTime(date);
 
     stars.forEach((star) => {
       const [ra, dec, mag, ci] = star;
@@ -53,7 +41,9 @@ export default function StarField({ stars }: Props) {
       colors.push(color.r, color.g, color.b);
 
       // brightness scaling
-      const size = Math.max(0.02, Math.pow(1.5 - mag / 6, 3) * 3);
+      const brightness = Math.pow(10, -0.4 * mag);
+      const size = Math.max(0.01, brightness * 8);
+      //   const size = THREE.MathUtils.lerp(0.02, 2, brightness);
       sizes.push(size);
     });
 
@@ -68,7 +58,9 @@ export default function StarField({ stars }: Props) {
 
   return (
     <points geometry={geometry}>
-      <pointsMaterial vertexColors color="white" size={0.7} sizeAttenuation />
+      <pointsMaterial vertexColors color="white" size={0.4} sizeAttenuation />
     </points>
   );
-}
+};
+
+export default StarField;

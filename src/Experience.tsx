@@ -1,3 +1,4 @@
+import Moon from './components/Moon';
 import StarField from './components/StarField';
 import type { Star } from './types';
 import { useEffect, useState } from 'react';
@@ -16,9 +17,17 @@ const Experience = () => {
       });
   }, []);
 
+  const testData = {
+    latitude: 21.1458,
+    longitude: 79.0882,
+    elevation: 310,
+    date: new Date(),
+  };
+
   return (
     <>
-      <StarField stars={stars} />
+      <Moon {...testData} />
+      <StarField stars={stars} {...testData} />
     </>
   );
 };
