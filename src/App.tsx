@@ -30,7 +30,7 @@ const App = () => {
           position: [0, 0, 0.1],
           fov: 90,
           near: 0.1,
-          far: 1000,
+          far: 800,
         }}
       >
         {controls.ambientLight && (
