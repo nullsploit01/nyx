@@ -5,7 +5,7 @@ import { Canvas } from '@react-three/fiber';
 
 const App = () => {
   const controls = useLevaControls('General', {
-    color: '#212122',
+    color: 'black',
     debugPhysics: false,
     ambientLight: true,
     ambientLightColor: '#88aaff',
@@ -27,10 +27,10 @@ const App = () => {
     >
       <Canvas
         camera={{
-          fov: 55,
+          position: [0, 0, 0.1],
+          fov: 90,
           near: 0.1,
-          far: 45,
-          position: [6, 1.44, 4],
+          far: 1000,
         }}
       >
         {controls.ambientLight && (
