@@ -27,7 +27,7 @@ const App = () => {
     >
       <Canvas
         camera={{
-          position: [0, 0, 0.1],
+          position: [0, 10, 30],
           fov: 90,
           near: 0.1,
           far: 800,
