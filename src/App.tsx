@@ -2,6 +2,7 @@ import Experience from './Experience';
 import { useLevaControls } from './hooks/useLevaControls';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import { Perf } from 'r3f-perf';
 
 const App = () => {
   const controls = useLevaControls('General', {
@@ -27,12 +28,13 @@ const App = () => {
     >
       <Canvas
         camera={{
-          position: [0, 5, 30],
+          position: [0, 7, 30],
           fov: 90,
           near: 0.1,
           far: 800,
         }}
       >
+        <Perf position="top-left" />
         {controls.ambientLight && (
           <ambientLight shadow-normalBias={0.02} intensity={controls.ambientLightIntensity} />
         )}

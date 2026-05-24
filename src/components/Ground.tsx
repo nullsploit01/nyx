@@ -4,7 +4,7 @@ import { DoubleSide, RepeatWrapping } from 'three';
 
 const Ground = () => {
   const controls = useLevaControls('Ground', {
-    position: [0, -50, 0] as [number, number, number],
+    position: [0, 0, 0] as [number, number, number],
     rotation: [Math.PI * 0.5, 0, 0] as [number, number, number],
     color: 'green',
   });
