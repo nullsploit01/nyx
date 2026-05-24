@@ -1,5 +1,6 @@
 import Ground from './components/Ground';
 import Moon from './components/Moon';
+import Player from './components/Player';
 import Props from './components/Props';
 import StarField from './components/StarField';
 import type { Star } from './types';
@@ -31,6 +32,7 @@ const Experience = () => {
       <Moon {...testData} />
       <Ground />
       <Props />
+      <Player />
       <StarField stars={stars} {...testData} />
     </>
   );
