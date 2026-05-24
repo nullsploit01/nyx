@@ -1,7 +1,9 @@
+import KeyboardControlMapping from './components/KeyboardControlMapping';
 import Experience from './Experience';
 import { useLevaControls } from './hooks/useLevaControls';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import { Physics } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
 const App = () => {
@@ -14,6 +16,7 @@ const App = () => {
     directionalLight: true,
     directionalLightIntensity: 1,
     directionalLightColor: 'white',
+    enableOrbitControls: false,
   });
 
   return (
@@ -46,8 +49,12 @@ const App = () => {
           />
         )}
         <color args={[controls.color]} attach={'background'} />
-        <Experience />
-        <OrbitControls />
+        <Physics debug={controls.debugPhysics}>
+          <KeyboardControlMapping>
+            <Experience />
+          </KeyboardControlMapping>
+        </Physics>
+        {controls.enableOrbitControls && <OrbitControls />}
       </Canvas>
     </div>
   );

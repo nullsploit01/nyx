@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei';
 
 const Tree = () => {
   const controls = useLevaControls('Tree', {
-    position: [-29, 0, 0] as [number, number, number],
+    position: [-50, 0, -10] as [number, number, number],
     rotation: [0, 0, 0] as [number, number, number],
     scale: 0.1,
   });

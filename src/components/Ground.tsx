@@ -1,5 +1,6 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import { useTexture } from '@react-three/drei';
+import { CuboidCollider, RigidBody } from '@react-three/rapier';
 import { DoubleSide, RepeatWrapping } from 'three';
 
 const Ground = () => {
@@ -20,22 +21,25 @@ const Ground = () => {
   Object.values(texture).forEach((tex) => {
     tex.wrapS = RepeatWrapping;
     tex.wrapT = RepeatWrapping;
-    tex.repeat.set(1000, 1000);
-    tex.center.set(0.5, 0.5);
+    tex.repeat.set(10, 10);
+    // tex.center.set(0.5, 0.5);
   });
 
   return (
     <>
-      <mesh position={controls.position} rotation={controls.rotation}>
-        <planeGeometry args={[100000, 100000, 10]} />
-        <meshStandardMaterial
-          displacementScale={0.4}
-          roughness={1}
-          metalness={0}
-          {...texture}
-          side={DoubleSide}
-        />
-      </mesh>
+      <RigidBody type="fixed" colliders={false}>
+        <mesh position={controls.position} rotation={controls.rotation}>
+          <planeGeometry args={[1000, 1000, 10]} />
+          <meshStandardMaterial
+            displacementScale={0.4}
+            roughness={1}
+            metalness={0}
+            {...texture}
+            side={DoubleSide}
+          />
+        </mesh>
+        <CuboidCollider args={[1000, 5, 1000]} />
+      </RigidBody>
     </>
   );
 };

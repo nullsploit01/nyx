@@ -58,7 +58,7 @@ const StarField = ({ latitude, longitude, elevation, date, stars }: Props) => {
 
   return (
     <points geometry={geometry}>
-      <pointsMaterial vertexColors color="white" size={0.65} sizeAttenuation />
+      <pointsMaterial vertexColors color="white" size={0.85} sizeAttenuation />
     </points>
   );
 };
