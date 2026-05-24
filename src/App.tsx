@@ -8,11 +8,11 @@ const App = () => {
     color: 'black',
     debugPhysics: false,
     ambientLight: true,
-    ambientLightColor: '#88aaff',
-    ambientLightIntensity: 0.22,
+    ambientLightColor: 'white',
+    ambientLightIntensity: 2,
     directionalLight: true,
-    directionalLightIntensity: 0.15,
-    directionalLightColor: '#749ceb',
+    directionalLightIntensity: 1,
+    directionalLightColor: 'white',
   });
 
   return (
@@ -27,7 +27,7 @@ const App = () => {
     >
       <Canvas
         camera={{
-          position: [0, 10, 30],
+          position: [0, 5, 30],
           fov: 90,
           near: 0.1,
           far: 800,

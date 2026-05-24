@@ -1,5 +1,6 @@
 import Ground from './components/Ground';
 import Moon from './components/Moon';
+import Props from './components/Props';
 import StarField from './components/StarField';
 import type { Star } from './types';
 import { useEffect, useState } from 'react';
@@ -29,6 +30,7 @@ const Experience = () => {
     <>
       <Moon {...testData} />
       <Ground />
+      <Props />
       <StarField stars={stars} {...testData} />
     </>
   );
