@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 const Experience = () => {
   const [stars, setStars] = useState<Star[]>([]);
+  const [location, setLocation] = useState<GeolocationPosition | null>(null);
 
   useEffect(() => {
     fetch('../public/stars.json')
@@ -18,11 +19,20 @@ const Experience = () => {
       .catch((err) => {
         console.error(err);
       });
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(position);
+      },
+      (error) => {
+        console.error(error);
+      },
+    );
   }, []);
 
   const testData = {
-    latitude: 21.1458,
-    longitude: 79.0882,
+    latitude: location?.coords.latitude ?? 0,
+    longitude: location?.coords.longitude ?? 0,
     elevation: 310,
     date: new Date(),
   };

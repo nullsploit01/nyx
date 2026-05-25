@@ -41,6 +41,9 @@ const Moon = (props: MoonProps) => {
           moonColor: {
             value: new THREE.Color(controls.color),
           },
+          tilt: {
+            value: THREE.MathUtils.degToRad(moonHor.azimuth - 180) * 0.35,
+          },
         }}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}

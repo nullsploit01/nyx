@@ -1,5 +1,6 @@
 uniform float phase;
 uniform vec3 moonColor;
+uniform float tilt;
 
 float random(vec2 st) {
     return fract(
@@ -10,6 +11,11 @@ float random(vec2 st) {
 void main() {
 
     vec2 uv = gl_PointCoord * 2.0 - 1.0;
+    
+    float s = sin(tilt);
+    float c = cos(tilt);
+    uv = mat2(c, -s, s,  c) * uv;
+
     float r = dot(uv, uv);
 
     // outside moon circle
