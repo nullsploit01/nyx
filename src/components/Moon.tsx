@@ -34,6 +34,7 @@ const Moon = (props: MoonProps) => {
       <shaderMaterial
         transparent={true}
         depthWrite={false}
+        blending={THREE.AdditiveBlending}
         uniforms={{
           phase: {
             value: phaseLight,
@@ -45,6 +46,7 @@ const Moon = (props: MoonProps) => {
             value: THREE.MathUtils.degToRad(moonHor.azimuth - 180) * 0.35,
           },
         }}
+        vertexColors={true}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
       />

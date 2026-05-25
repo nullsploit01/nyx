@@ -49,6 +49,9 @@ void main() {
     float glow = edge * pow(diffuse, 2.0) * 0.03;
     vec3 baseColor = mix(vec3(0.82), moonColor, 0.25);
 
+    float halo = 1.0 - smoothstep(0.6, 2.5, length(uv));
+    halo *= pow(diffuse, 0.7) * 0.18;
+    halo *= smoothstep(-0.2, 0.8, dot(normal, lightDir));
     
     // noise
     float noise1 = random(floor(uv * 25.0));
@@ -79,8 +82,8 @@ void main() {
     baseColor *= 1.0 + noise * diffuse * 0.03;
 
     vec3 color = baseColor * diffuse + vec3(1.0) * glow;
+    vec3 finalColor = color + vec3(1.0) * halo;
+    float alpha = max(diffuse, halo);
 
-    color *= 1.0 + noise * diffuse * 0.03;
-    color *= 1.0 - maria * diffuse * 0.06;
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(finalColor, alpha);
 }
