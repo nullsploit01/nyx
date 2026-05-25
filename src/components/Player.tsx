@@ -13,6 +13,7 @@ const Player = () => {
     position: [-1.3, 11.3, 36] as [number, number, number],
     rotation: [0, Math.PI, 0] as [number, number, number],
     scale: 1,
+    disableControls: false,
     animation: {
       value: animations.names[0],
       options: animations.names,
@@ -40,6 +41,7 @@ const Player = () => {
         turnSpeed={10}
         mode="CameraBasedMovement"
         maxVelLimit={40}
+        disableFollowCam={controls.disableControls}
         jumpVel={0}
         camInitDir={{ x: 0, y: Math.PI }}
       >

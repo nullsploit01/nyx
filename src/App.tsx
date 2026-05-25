@@ -54,7 +54,7 @@ const App = () => {
             <Experience />
           </KeyboardControlMapping>
         </Physics>
-        {controls.enableOrbitControls && <OrbitControls />}
+        {controls.enableOrbitControls && <OrbitControls makeDefault />}
       </Canvas>
     </div>
   );
