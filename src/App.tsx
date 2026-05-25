@@ -3,6 +3,7 @@ import Experience from './Experience';
 import { useLevaControls } from './hooks/useLevaControls';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Physics } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
@@ -49,6 +50,9 @@ const App = () => {
           />
         )}
         <color args={[controls.color]} attach={'background'} />
+        <EffectComposer>
+          <Bloom intensity={1.8} luminanceThreshold={0.02} luminanceSmoothing={0.95} mipmapBlur />
+        </EffectComposer>
         <Physics debug={controls.debugPhysics}>
           <KeyboardControlMapping>
             <Experience />
