@@ -1,3 +1,4 @@
+import Globe from './components/Globe';
 import Ground from './components/Ground';
 import Moon from './components/Moon';
 import Player from './components/Player';
@@ -9,6 +10,7 @@ import { useEffect, useState } from 'react';
 const Experience = () => {
   const [stars, setStars] = useState<Star[]>([]);
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
+  const [showGlobe, setShowGlobe] = useState(false);
 
   useEffect(() => {
     fetch('../public/stars.json')
@@ -26,6 +28,7 @@ const Experience = () => {
       },
       (error) => {
         console.error(error);
+        setShowGlobe(true);
       },
     );
   }, []);
@@ -39,11 +42,17 @@ const Experience = () => {
 
   return (
     <>
-      <Moon {...testData} />
-      <Ground />
-      <Props />
-      <Player />
-      <StarField stars={stars} {...testData} />
+      {showGlobe ? (
+        <Globe />
+      ) : (
+        <>
+          <Moon {...testData} />
+          <Ground />
+          <Props />
+          <Player />
+          <StarField stars={stars} {...testData} />
+        </>
+      )}
     </>
   );
 };
