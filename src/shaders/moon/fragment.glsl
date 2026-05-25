@@ -10,20 +10,26 @@ void main() {
     if (r > 1.0) discard;
 
     // sphere normal
-    vec3 normal = normalize(vec3(uv, sqrt(1.0 - r)));
+    vec3 normal = normalize(vec3(uv, pow(1.0 - r, 0.2)));
 
     // light direction
-    vec3 lightDir = normalize(vec3(phase, 0.0, 0.2));
+    vec3 lightDir = normalize(vec3(phase, 0.0, 0.12));
 
     // diffuse lighting
-    float diffuse = max(dot(normal, lightDir), 0.0);
+    float diffuse = max(dot(normal, lightDir), 0.0);  
+    float ambient = (1.0 - abs(phase)) * 0.02;
+    diffuse = max(diffuse, ambient);
 
     // soften terminator
-    diffuse = smoothstep(0.0, 0.15, diffuse);
+    diffuse = smoothstep(0.0, 0.07, diffuse);
 
     // subtle rim glow
-    float rim = 1.0 - smoothstep( 0.7, 1.0, sqrt(r));
+    float edge = 1.0 - smoothstep(0.85, 1.0, sqrt(r));
 
-    vec3 color = moonColor * (diffuse + rim * 0.08);
+    // only glow on lit side
+    float glow = edge * pow(diffuse, 2.0) * 0.03;
+    vec3 baseColor = mix(vec3(0.82), moonColor, 0.25);
+
+    vec3 color = baseColor * diffuse + vec3(1.0) * glow;
     gl_FragColor = vec4(color, 1.0);
 }
