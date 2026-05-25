@@ -1,3 +1,5 @@
+import fragmentShader from '../shaders/stars/fragment.glsl';
+import vertexShader from '../shaders/stars/vertex.glsl';
 import type { Star } from '../types';
 import { altAzToXYZ, colorFromCI } from '../utils';
 import * as Astronomy from 'astronomy-engine';
@@ -33,17 +35,15 @@ const StarField = ({ latitude, longitude, elevation, date, stars }: Props) => {
       }
 
       const [x, y, z] = altAzToXYZ(horizontal.altitude, horizontal.azimuth, 500);
-
       positions.push(x, y, z);
 
-      // star color
       const color = colorFromCI(ci);
+      color.lerp(new THREE.Color('white'), 0.65);
       colors.push(color.r, color.g, color.b);
 
       // brightness scaling
       const brightness = Math.pow(10, -0.4 * mag);
-      const size = Math.max(0.01, brightness * 8);
-      //   const size = THREE.MathUtils.lerp(0.02, 2, brightness);
+      const size = Math.max(0.08, Math.pow(brightness, 0.9) * 15);
       sizes.push(size);
     });
 
@@ -58,7 +58,14 @@ const StarField = ({ latitude, longitude, elevation, date, stars }: Props) => {
 
   return (
     <points geometry={geometry}>
-      <pointsMaterial vertexColors color="white" size={0.85} sizeAttenuation />
+      <shaderMaterial
+        transparent={true}
+        depthWrite={false}
+        vertexColors={true}
+        blending={THREE.AdditiveBlending}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
     </points>
   );
 };
