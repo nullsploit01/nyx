@@ -6,7 +6,7 @@ import LocationCard from './LocationCard';
 import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
-import { AdditiveBlending, BackSide, type Mesh, Vector3 } from 'three';
+import { AdditiveBlending, BackSide, Group, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
   const { camera } = useThree();
@@ -16,6 +16,7 @@ const Globe = () => {
   const globeRef = useRef<Mesh>(null);
   const introProgress = useRef(0);
   const targetCameraPosition = useRef(new Vector3(4, 2, 8));
+  const markerRef = useRef<Group>(null);
 
   const [marker, setMarker] = useState<Vector3 | null>(null);
   const [introDone, setIntroDone] = useState(false);
@@ -125,6 +126,9 @@ const Globe = () => {
           lng += 90;
           lng = ((((lng + 180) % 360) + 360) % 360) - 180;
 
+          const normal = localPoint.clone().normalize();
+          markerRef.current?.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), normal);
+          markerRef.current?.rotateX(-1.2);
           setCoords({ lat, lon: lng });
           setLoadingMarkedLocation(true);
         }}
@@ -132,14 +136,14 @@ const Globe = () => {
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
         {marker && (
-          <group>
-            <mesh scale={0.5} position={marker}>
+          <>
+            <mesh position={marker} ref={markerRef} scale={0.5}>
               <primitive object={locationPinModel.scene} />
             </mesh>
             {markedLocation && (
               <LocationCard loading={loadingMarkedLocation} location={markedLocation} />
             )}
-          </group>
+          </>
         )}
       </mesh>
 

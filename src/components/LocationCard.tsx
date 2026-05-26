@@ -14,7 +14,7 @@ const LocationCard = ({
     <Html
       center
       style={{
-        transform: 'translate3d(-50%, 120px, 0)',
+        transform: 'translate3d(70%, 20px, 0)',
       }}
     >
       <div
@@ -83,6 +83,7 @@ const LocationCard = ({
               This location appears to be somewhere between ocean, wilderness, and humanity not
               documenting things properly.
             </p>
+            <ViewNightSkyButton />
           </div>
         ) : (
           <>
@@ -209,54 +210,60 @@ const LocationCard = ({
               </div>
             </div>
 
-            <button
-              style={{
-                marginTop: '22px',
-                width: '100%',
-                padding: '12px 14px',
-                borderRadius: '14px',
-                border: '1px solid rgba(120,160,255,0.14)',
-                background: 'linear-gradient(to bottom, rgba(25,35,70,0.65), rgba(15,22,40,0.82))',
-                color: 'white',
-                fontSize: '0.95rem',
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 0 24px rgba(60,120,255,0.12)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.border = '1px solid rgba(140,180,255,0.28)';
-                e.currentTarget.style.boxShadow = `
-                    0 0 30px rgba(80,140,255,0.22),
-                    0 0 60px rgba(80,140,255,0.08)
-                `;
-                e.currentTarget.style.background =
-                  'linear-gradient(to bottom, rgba(40,60,120,0.88), rgba(20,30,55,0.95))';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0px)';
-                e.currentTarget.style.border = '1px solid rgba(120,160,255,0.14)';
-                e.currentTarget.style.boxShadow = '0 0 24px rgba(60,120,255,0.12)';
-                e.currentTarget.style.background =
-                  'linear-gradient(to bottom, rgba(25,35,70,0.65), rgba(15,22,40,0.82))';
-              }}
-            >
-              <span
-                style={{
-                  color: '#9ec5ff',
-                  marginRight: '8px',
-                }}
-              >
-                ✦
-              </span>
-              View Night Sky
-            </button>
+            <ViewNightSkyButton />
           </>
         )}
       </div>
     </Html>
+  );
+};
+
+const ViewNightSkyButton = () => {
+  return (
+    <button
+      style={{
+        marginTop: '22px',
+        width: '100%',
+        padding: '12px 14px',
+        borderRadius: '14px',
+        border: '1px solid rgba(120,160,255,0.14)',
+        background: 'linear-gradient(to bottom, rgba(25,35,70,0.65), rgba(15,22,40,0.82))',
+        color: 'white',
+        fontSize: '0.95rem',
+        fontWeight: 600,
+        letterSpacing: '-0.01em',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        boxShadow: '0 0 24px rgba(60,120,255,0.12)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-1px)';
+        e.currentTarget.style.border = '1px solid rgba(140,180,255,0.28)';
+        e.currentTarget.style.boxShadow = `
+                    0 0 30px rgba(80,140,255,0.22),
+                    0 0 60px rgba(80,140,255,0.08)
+                `;
+        e.currentTarget.style.background =
+          'linear-gradient(to bottom, rgba(40,60,120,0.88), rgba(20,30,55,0.95))';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0px)';
+        e.currentTarget.style.border = '1px solid rgba(120,160,255,0.14)';
+        e.currentTarget.style.boxShadow = '0 0 24px rgba(60,120,255,0.12)';
+        e.currentTarget.style.background =
+          'linear-gradient(to bottom, rgba(25,35,70,0.65), rgba(15,22,40,0.82))';
+      }}
+    >
+      <span
+        style={{
+          color: '#9ec5ff',
+          marginRight: '8px',
+        }}
+      >
+        ✦
+      </span>
+      View Night Sky
+    </button>
   );
 };
 
