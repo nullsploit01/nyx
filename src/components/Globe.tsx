@@ -2,15 +2,15 @@ import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
 import { OrbitControls, Sparkles, useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { AdditiveBlending, BackSide, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
   const { camera } = useThree();
 
-  const globeRef = useRef<Mesh>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
+  const globeRef = useRef<Mesh>(null);
   const introProgress = useRef(0);
   const targetCameraPosition = useRef(new Vector3(4, 2, 8));
 
@@ -23,47 +23,45 @@ const Globe = () => {
     './textures/earth/earth-topology.png',
   ]);
 
-  useEffect(() => {
-    camera.position.set(12, 4, 18);
-  }, []);
-
   useFrame((_, delta) => {
-    if (!globeRef.current) {
+    if (!globeRef.current || !controlsRef.current) {
       return;
     }
 
-    // slower during camera move
-    const rotationSpeed = isCameraMoving ? 0.01 : 0.02;
-    globeRef.current.rotation.y += delta * rotationSpeed;
+    // pause rotation during camera movement
+    if (!isCameraMoving) {
+      globeRef.current.rotation.y += delta * 0.02;
+    }
 
-    // intro animation
-    if (!introDone && controlsRef.current) {
+    // cinematic intro
+    if (!introDone) {
       introProgress.current += delta * 0.22;
 
       const t = Math.min(introProgress.current, 1);
       const eased = 1 - Math.pow(1 - t, 3);
       camera.position.set(12 - eased * 8, 4 - eased * 3, 18 - eased * 11);
 
-      // cinematic curve
+      // slight cinematic arc
       camera.position.x += Math.sin(t * Math.PI) * 2;
-      camera.lookAt(0, 0, 0);
+
+      // orbit controls owns rotation
+      controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update();
 
       if (t >= 1) {
         setIntroDone(true);
-        controlsRef.current.target.set(0, 0, 0);
-        controlsRef.current.update();
       }
 
       return;
     }
 
-    // smooth camera motion
+    // smooth camera movement
     if (isCameraMoving) {
-      camera.position.lerp(targetCameraPosition.current, delta * 2);
-      camera.lookAt(0, 0, 0);
+      camera.position.lerp(targetCameraPosition.current, delta * 1.8);
+      controlsRef.current.update();
 
-      // stop transition
-      if (camera.position.distanceTo(targetCameraPosition.current) < 0.15) {
+      // finish movement
+      if (camera.position.distanceTo(targetCameraPosition.current) < 0.1) {
         setIsCameraMoving(false);
       }
     }
@@ -81,18 +79,18 @@ const Globe = () => {
           const localPoint = globeRef.current.worldToLocal(e.point.clone());
           localPoint.normalize();
 
-          // marker slightly above surface
+          // marker above surface
           const markerPosition = localPoint.clone().multiplyScalar(4.05);
           setMarker(markerPosition);
 
-          // camera direction
+          // world direction
           const direction = e.point.clone().normalize();
 
-          // cinematic offset
+          // smoother camera angle
           const cameraPosition = direction
             .clone()
             .multiplyScalar(8)
-            .add(new Vector3(1, 0.5, 1));
+            .add(new Vector3(0.8, 0.4, 0.8));
 
           targetCameraPosition.current.copy(cameraPosition);
           setIsCameraMoving(true);
@@ -100,7 +98,6 @@ const Globe = () => {
           // lat/lng
           const lat = Math.asin(localPoint.y) * (180 / Math.PI);
           let lng = Math.atan2(-localPoint.x, -localPoint.z) * (180 / Math.PI);
-
           lng += 90;
           lng = ((((lng + 180) % 360) + 360) % 360) - 180;
 
@@ -112,10 +109,10 @@ const Globe = () => {
       >
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
-
         {marker && (
           <mesh position={marker}>
             <sphereGeometry args={[0.05]} />
+
             <meshBasicMaterial color="red" />
           </mesh>
         )}
@@ -136,6 +133,7 @@ const Globe = () => {
       </mesh>
 
       <ambientLight intensity={3} />
+
       <directionalLight position={[10, 5, 10]} intensity={2} />
 
       <Sparkles
