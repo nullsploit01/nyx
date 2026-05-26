@@ -1,37 +1,67 @@
 import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
-import { Sparkles, useTexture } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { OrbitControls, Sparkles, useTexture } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
+import { useEffect, useRef, useState } from 'react';
 import { AdditiveBlending, BackSide, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
-  const globeRef = useRef<Mesh>(null);
-  const [marker, setMarker] = useState<Vector3 | null>(null);
+  const { camera } = useThree();
 
+  const globeRef = useRef<Mesh>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const controlsRef = useRef<any>(null);
+  const introProgress = useRef(0);
+
+  const [marker, setMarker] = useState<Vector3 | null>(null);
+  const [introDone, setIntroDone] = useState(false);
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/earth-night.jpg',
     './textures/earth/earth-topology.png',
   ]);
+
+  useEffect(() => {
+    camera.position.set(12, 4, 14);
+  }, []);
 
   useFrame((_, delta) => {
     if (!globeRef.current) {
       return;
     }
 
-    globeRef.current.rotation.y += delta * 0.05;
+    globeRef.current.rotation.y += delta * 0.02;
+
+    if (!introDone && controlsRef.current) {
+      introProgress.current += delta * 0.22;
+
+      const t = Math.min(introProgress.current, 1);
+
+      // smooth easing
+      const eased = 1 - Math.pow(1 - t, 3);
+
+      // curved cinematic motion
+      camera.position.set(12 - eased * 8, 4 - eased * 3, 18 - eased * 11);
+      camera.position.x += Math.sin(t * Math.PI) * 2;
+      camera.lookAt(0, 0, 0);
+
+      if (t >= 1) {
+        setIntroDone(true);
+        controlsRef.current?.target.set(0, 0, 0);
+        controlsRef.current?.update();
+      }
+    }
   });
 
   return (
     <>
       <mesh
         onClick={(e) => {
-          setMarker(e.point.clone());
-          if (!globeRef.current) {
+          if (!globeRef.current || !introDone) {
             return;
           }
 
           const localPoint = globeRef.current.worldToLocal(e.point.clone());
+          setMarker(localPoint.clone());
           localPoint.normalize();
 
           const lat = Math.asin(localPoint.y) * (180 / Math.PI);
@@ -56,13 +86,14 @@ const Globe = () => {
       >
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
+
+        {marker && (
+          <mesh position={marker}>
+            <sphereGeometry args={[0.05]} />
+            <meshBasicMaterial color="red" />
+          </mesh>
+        )}
       </mesh>
-      {marker && (
-        <mesh position={marker}>
-          <sphereGeometry args={[0.05]} />
-          <meshBasicMaterial color="red" />
-        </mesh>
-      )}
       <mesh scale={1.006}>
         <sphereGeometry args={[4, 64, 64]} />
         <shaderMaterial
@@ -77,13 +108,20 @@ const Globe = () => {
       </mesh>
       <ambientLight intensity={7} />
       <Sparkles
-        count={200}
+        count={1000}
         position={[0, 3, 0]}
-        scale={12}
+        scale={100}
         size={1}
         speed={0.2}
         opacity={0.4}
         color="#88ccff"
+      />
+      <OrbitControls
+        ref={controlsRef}
+        enabled={introDone}
+        enablePan={false}
+        minDistance={5}
+        maxDistance={20}
       />
     </>
   );
