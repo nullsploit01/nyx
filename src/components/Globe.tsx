@@ -2,6 +2,7 @@ import { getLocationByLatAndLng } from '../services/api/location';
 import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
 import type { NominatimReverseResponse } from '../types';
+import LocationCard from './LocationCard';
 import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
@@ -52,7 +53,7 @@ const Globe = () => {
     }
 
     // pause rotation during camera movement
-    if (!isCameraMoving) {
+    if (!isCameraMoving && !markedLocation) {
       globeRef.current.rotation.y += delta * 0.02;
     }
 
@@ -130,9 +131,12 @@ const Globe = () => {
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
         {marker && (
-          <mesh scale={0.5} position={marker}>
-            <primitive object={locationPinModel.scene} />
-          </mesh>
+          <group>
+            <mesh scale={0.5} position={marker}>
+              <primitive object={locationPinModel.scene} />
+            </mesh>
+            {markedLocation && <LocationCard location={markedLocation} />}
+          </group>
         )}
       </mesh>
 
