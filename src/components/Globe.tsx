@@ -1,8 +1,10 @@
+import { getLocationByLatAndLng } from '../services/api/location';
 import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
+import type { NominatimReverseResponse } from '../types';
 import { OrbitControls, Sparkles, useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AdditiveBlending, BackSide, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
@@ -17,11 +19,30 @@ const Globe = () => {
   const [marker, setMarker] = useState<Vector3 | null>(null);
   const [introDone, setIntroDone] = useState(false);
   const [isCameraMoving, setIsCameraMoving] = useState(false);
+  const [coords, setCoords] = useState({ lat: 0, lon: 0 });
+  const [markedLocation, setMarkedLocation] = useState<NominatimReverseResponse | null>(null);
 
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/earth-night.jpg',
     './textures/earth/earth-topology.png',
   ]);
+
+  useEffect(() => {
+    if (!coords.lat && !coords.lon) {
+      return;
+    }
+
+    getLocationByLatAndLng(coords.lat, coords.lon)
+      .then((res) => {
+        console.log(res.data.display_name);
+
+        setMarkedLocation(res.data);
+        console.log(markedLocation);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [coords]);
 
   useFrame((_, delta) => {
     if (!globeRef.current || !controlsRef.current) {
@@ -101,10 +122,7 @@ const Globe = () => {
           lng += 90;
           lng = ((((lng + 180) % 360) + 360) % 360) - 180;
 
-          console.log({
-            lat,
-            lng,
-          });
+          setCoords({ lat, lon: lng });
         }}
       >
         <sphereGeometry args={[4, 64, 64]} />
