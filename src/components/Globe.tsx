@@ -22,7 +22,7 @@ const Globe = () => {
   const [isCameraMoving, setIsCameraMoving] = useState(false);
   const [coords, setCoords] = useState({ lat: 0, lon: 0 });
   const [markedLocation, setMarkedLocation] = useState<NominatimReverseResponse | null>(null);
-
+  const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/earth-night.jpg',
     './textures/earth/earth-topology.png',
@@ -37,13 +37,13 @@ const Globe = () => {
 
     getLocationByLatAndLng(coords.lat, coords.lon)
       .then((res) => {
-        console.log(res.data.display_name);
-
         setMarkedLocation(res.data);
-        console.log(markedLocation);
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
+        setLoadingMarkedLocation(false);
       });
   }, [coords]);
 
@@ -126,6 +126,7 @@ const Globe = () => {
           lng = ((((lng + 180) % 360) + 360) % 360) - 180;
 
           setCoords({ lat, lon: lng });
+          setLoadingMarkedLocation(true);
         }}
       >
         <sphereGeometry args={[4, 64, 64]} />
@@ -135,7 +136,9 @@ const Globe = () => {
             <mesh scale={0.5} position={marker}>
               <primitive object={locationPinModel.scene} />
             </mesh>
-            {markedLocation && <LocationCard location={markedLocation} />}
+            {markedLocation && (
+              <LocationCard loading={loadingMarkedLocation} location={markedLocation} />
+            )}
           </group>
         )}
       </mesh>

@@ -1,7 +1,13 @@
 import type { NominatimReverseResponse } from '../types';
 import { Html } from '@react-three/drei';
 
-const LocationCard = ({ location }: { location: NominatimReverseResponse }) => {
+const LocationCard = ({
+  location,
+  loading,
+}: {
+  location: NominatimReverseResponse;
+  loading: boolean;
+}) => {
   const hasError = 'error' in location;
 
   return (
@@ -42,7 +48,13 @@ const LocationCard = ({ location }: { location: NominatimReverseResponse }) => {
             pointerEvents: 'none',
           }}
         />
-        {hasError ? (
+        {loading ? (
+          <div className="location-loading">
+            <div className="location-spinner" />
+
+            <div className="location-loading-text">Locating celestial coordinates...</div>
+          </div>
+        ) : hasError ? (
           <div
             style={{
               position: 'relative',
