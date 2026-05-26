@@ -2,7 +2,7 @@ import { getLocationByLatAndLng } from '../services/api/location';
 import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
 import type { NominatimReverseResponse } from '../types';
-import { OrbitControls, Sparkles, useTexture } from '@react-three/drei';
+import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { AdditiveBlending, BackSide, type Mesh, Vector3 } from 'three';
@@ -26,6 +26,8 @@ const Globe = () => {
     './textures/earth/earth-night.jpg',
     './textures/earth/earth-topology.png',
   ]);
+
+  const locationPinModel = useGLTF('./models/pin_location/pin_location.glb');
 
   useEffect(() => {
     if (!coords.lat && !coords.lon) {
@@ -128,10 +130,8 @@ const Globe = () => {
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
         {marker && (
-          <mesh position={marker}>
-            <sphereGeometry args={[0.05]} />
-
-            <meshBasicMaterial color="red" />
+          <mesh scale={0.5} position={marker}>
+            <primitive object={locationPinModel.scene} />
           </mesh>
         )}
       </mesh>

@@ -5,3 +5,5 @@
 "DAE 5 Finished props- Echo house" (https://skfb.ly/p8TN7) by Viviane Noack is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Cute ghost" (https://skfb.ly/oTDy8) by Urielgc is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+"map pin, location pin" (https://skfb.ly/oPYSZ) by bashgod is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
