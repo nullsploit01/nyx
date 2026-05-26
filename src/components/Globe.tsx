@@ -2,11 +2,12 @@ import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
 import { Sparkles, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
-import { AdditiveBlending, BackSide, type Mesh } from 'three';
+import { useRef, useState } from 'react';
+import { AdditiveBlending, BackSide, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
   const globeRef = useRef<Mesh>(null);
+  const [marker, setMarker] = useState<Vector3 | null>(null);
 
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/earth-night.jpg',
@@ -23,10 +24,45 @@ const Globe = () => {
 
   return (
     <>
-      <mesh ref={globeRef}>
+      <mesh
+        onClick={(e) => {
+          setMarker(e.point.clone());
+          if (!globeRef.current) {
+            return;
+          }
+
+          const localPoint = globeRef.current.worldToLocal(e.point.clone());
+          localPoint.normalize();
+
+          const lat = Math.asin(localPoint.y) * (180 / Math.PI);
+          let lng = Math.atan2(-localPoint.x, -localPoint.z) * (180 / Math.PI);
+
+          lng += 90;
+
+          if (lng > 180) {
+            lng -= 360;
+          }
+
+          if (lng < -180) {
+            lng += 360;
+          }
+
+          console.log({
+            lat,
+            lng,
+          });
+        }}
+        ref={globeRef}
+      >
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
       </mesh>
+      {marker && (
+        <mesh position={marker}>
+          <sphereGeometry args={[0.05]} />
+          <meshBasicMaterial color="red" />
+        </mesh>
+      )}
       <mesh scale={1.006}>
         <sphereGeometry args={[4, 64, 64]} />
         <shaderMaterial
