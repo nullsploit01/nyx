@@ -47,7 +47,7 @@ void main() {
 
     // only glow on lit side
     float glow = edge * pow(diffuse, 2.0) * 0.03;
-    vec3 baseColor = mix(vec3(0.82), moonColor, 0.25);
+    vec3 baseColor = mix(vec3(0.72), moonColor, 0.35);
 
     float halo = 1.0 - smoothstep(0.6, 2.5, length(uv));
     halo *= pow(diffuse, 0.7) * 0.18;
@@ -64,21 +64,31 @@ void main() {
     );
 
     vec2 mariaUv = uv;
-    mariaUv.x += (noise - 0.5) * 0.08;
-    mariaUv.y += (noise - 0.5) * 0.05;
+    mariaUv.x += (noise - 0.5) * 0.12;
+    mariaUv.y += (noise - 0.5) * 0.08;
 
     float maria = 0.0;
     maria += circle(mariaUv, vec2(-0.28, 0.18), 0.28);
     maria += circle(mariaUv, vec2(-0.05, 0.02), 0.18);
     maria += circle(mariaUv, vec2(0.12, -0.22), 0.2);
     maria += circle(mariaUv, vec2(0.25, 0.18), 0.14);
+    maria += circle(mariaUv, vec2(-0.18, -0.12), 0.09);
+    maria += circle(mariaUv, vec2(0.05, 0.26), 0.07);
+    maria += circle(mariaUv, vec2(0.32, -0.08), 0.06);
+    maria += circle(mariaUv, vec2(-0.36, 0.04), 0.05);
+    maria +=
+    circle(
+        mariaUv,
+        vec2(0.0, 0.0),
+        0.42
+    ) * 0.18;
     maria *= 0.85 + noise * 0.3;
-    maria = clamp(maria, 0.0, 1.0);
+    maria = clamp(maria, 0.0, 0.8);
 
     float edgeFade = smoothstep(1.0, 0.3, sqrt(r));
     maria *= edgeFade;
 
-    baseColor *= 1.0 - maria * 0.08;
+    baseColor *= 1.0 - maria * 1.0;
     baseColor *= 1.0 + noise * diffuse * 0.03;
 
     vec3 color = baseColor * diffuse + vec3(1.0) * glow;

@@ -1,4 +1,5 @@
 import { Color } from 'three';
+import tzLookup from 'tz-lookup';
 
 export const raDecToXYZ = (ra: number, dec: number, radius = 100): [number, number, number] => {
   const raRad = (ra * 15 * Math.PI) / 180;
@@ -32,4 +33,41 @@ export const colorFromCI = (ci: number) => {
   }
 
   return new Color('#ffcc99');
+};
+
+export type LocationTimeData = {
+  timezone: string;
+  localTime: string;
+  date: string;
+};
+
+export const getLocationTime = (lat: number, lng: number): LocationTimeData => {
+  const timezone = tzLookup(lat, lng);
+  const now = new Date();
+
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const parts = formatter.formatToParts(now);
+  const localTime = `${parts.find((p) => p.type === 'hour')?.value}:${
+    parts.find((p) => p.type === 'minute')?.value
+  } ${parts.find((p) => p.type === 'dayPeriod')?.value}`;
+
+  const date = `${parts.find((p) => p.type === 'weekday')?.value}, ${
+    parts.find((p) => p.type === 'month')?.value
+  } ${parts.find((p) => p.type === 'day')?.value}, ${parts.find((p) => p.type === 'year')?.value}`;
+
+  return {
+    timezone,
+    localTime,
+    date,
+  };
 };

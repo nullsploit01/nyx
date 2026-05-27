@@ -1,13 +1,16 @@
 import type { NominatimReverseResponse } from '../types';
+import type { LocationTimeData } from '../utils';
 import { Html } from '@react-three/drei';
 
 const LocationCard = ({
   location,
+  locationTime,
   loading,
   onClick,
 }: {
   location: NominatimReverseResponse;
   loading: boolean;
+  locationTime: LocationTimeData | null;
   onClick: () => void;
 }) => {
   const hasError = 'error' in location;
@@ -150,7 +153,72 @@ const LocationCard = ({
                 {location.address.country}
               </div>
             </div>
+            {locationTime && (
+              <div
+                style={{
+                  marginTop: '18px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  color: 'rgba(180,200,255,0.72)',
+                  fontSize: '0.82rem',
+                  borderTop: '1px solid rgba(255,255,255,0.05)',
+                  paddingTop: '14px',
+                }}
+              >
+                <div>
+                  <span
+                    style={{
+                      color: 'rgba(150,170,220,0.48)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.12em',
+                      fontSize: '0.68rem',
+                    }}
+                  >
+                    Local Time
+                  </span>
 
+                  <div
+                    style={{
+                      marginTop: '6px',
+                      fontSize: '1rem',
+                      fontWeight: 600,
+                      fontFamily: 'JetBrains Mono, monospace',
+                      color: 'white',
+                    }}
+                  >
+                    {locationTime.localTime}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    textAlign: 'right',
+                  }}
+                >
+                  <div
+                    style={{
+                      color: 'rgba(150,170,220,0.48)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.12em',
+                      fontSize: '0.68rem',
+                    }}
+                  >
+                    Timezone
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: '6px',
+                      fontSize: '0.82rem',
+                      color: 'rgba(200,220,255,0.72)',
+                    }}
+                  >
+                    {locationTime.timezone}
+                  </div>
+                </div>
+              </div>
+            )}
             <div
               style={{
                 marginTop: '22px',
@@ -207,7 +275,6 @@ const LocationCard = ({
                 </div>
               </div>
             </div>
-
             <ViewNightSkyButton onClick={onClick} />
           </>
         )}

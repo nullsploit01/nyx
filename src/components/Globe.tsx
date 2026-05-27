@@ -3,10 +3,11 @@ import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
 import { useGlobeStore } from '../stores/experience';
 import type { NominatimReverseResponse } from '../types';
+import { getLocationTime } from '../utils';
 import LocationCard from './LocationCard';
 import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
 import { type ThreeEvent, useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdditiveBlending, BackSide, Group, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
@@ -53,6 +54,14 @@ const Globe = () => {
       .finally(() => {
         setLoadingMarkedLocation(false);
       });
+  }, [coords]);
+
+  const locationTime = useMemo(() => {
+    if (!coords) {
+      return null;
+    }
+
+    return getLocationTime(coords.lat, coords.lng);
   }, [coords]);
 
   useFrame((_, delta) => {
@@ -168,6 +177,7 @@ const Globe = () => {
             </mesh>
             {location && (
               <LocationCard
+                locationTime={locationTime}
                 onClick={onViewSkyBtnClick}
                 loading={loadingMarkedLocation}
                 location={location}
@@ -217,5 +227,9 @@ const Globe = () => {
     </>
   );
 };
+
+useGLTF.preload('./models/tree/pine_tree.glb');
+useGLTF.preload('./models/echo_house/echo_house.glb');
+useGLTF.preload('./models/ghost/ghost.glb');
 
 export default Globe;
