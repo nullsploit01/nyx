@@ -1,9 +1,8 @@
 varying vec2 vUv;
 
 void main() {
-
-    vec3 baseColor = mix(vec3(0.16, 0.28, 0.12), vec3(0.32, 0.48, 0.24), vUv.y);
-    float fresnel = pow(1.0 - abs(vUv.x - 0.5) * 1.0, 1.0);
-    baseColor += fresnel * 0.04;
+    vec3 bottomColor = vec3(0.03, 0.06, 0.02);
+    vec3 topColor = vec3(0.08, 0.12, 0.05);
+    vec3 baseColor = mix(bottomColor, topColor, vUv.y);
     gl_FragColor = vec4(baseColor, 1.0);
 }

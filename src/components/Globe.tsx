@@ -30,7 +30,7 @@ const Globe = () => {
   const [introDone, setIntroDone] = useState(false);
   const [isCameraMoving, setIsCameraMoving] = useState(false);
   const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
-  const [clickedViewSky, setClickedViewSky] = useState(false);
+  // const [clickedViewSky, setClickedViewSky] = useState(false);
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/8081_earthlights4k.jpg',
     './textures/earth/8081_earthbump4k.jpg',
@@ -104,9 +104,9 @@ const Globe = () => {
       // finish movement
       if (camera.position.distanceTo(targetCameraPosition.current) < 0.1) {
         setIsCameraMoving(false);
-        if (clickedViewSky) {
-          setShowGlobe(false);
-        }
+        // if (clickedViewSky) {
+        //   setShowGlobe(false);
+        // }
       }
     }
   });
@@ -162,7 +162,10 @@ const Globe = () => {
 
     targetCameraPosition.current.copy(zoomPosition);
     setIsCameraMoving(true);
-    setClickedViewSky(true);
+    // setClickedViewSky(true);
+    setTimeout(() => {
+      setShowGlobe(false);
+    }, 3000);
   };
 
   return (
