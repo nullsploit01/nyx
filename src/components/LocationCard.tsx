@@ -4,9 +4,11 @@ import { Html } from '@react-three/drei';
 const LocationCard = ({
   location,
   loading,
+  onClick,
 }: {
   location: NominatimReverseResponse;
   loading: boolean;
+  onClick: () => void;
 }) => {
   const hasError = 'error' in location;
 
@@ -80,10 +82,11 @@ const LocationCard = ({
                 lineHeight: 1.5,
               }}
             >
-              This location appears to be somewhere between ocean, wilderness, and humanity not
-              documenting things properly.
+              {location.error === 'Service Unavailable'
+                ? 'The location service is currently unavailable. You can still view the night sky'
+                : 'This location appears to be somewhere between ocean, wilderness, and humanity not documenting things properly.'}
             </p>
-            <ViewNightSkyButton />
+            <ViewNightSkyButton onClick={onClick} />
           </div>
         ) : (
           <>
@@ -184,11 +187,8 @@ const LocationCard = ({
                 <div
                   style={{
                     fontSize: '0.7rem',
-
                     letterSpacing: '0.18em',
-
                     textTransform: 'uppercase',
-
                     color: 'rgba(150,170,220,0.55)',
                   }}
                 >
@@ -198,9 +198,7 @@ const LocationCard = ({
                 <div
                   style={{
                     marginTop: '6px',
-
                     fontSize: '1rem',
-
                     fontFamily: 'JetBrains Mono, monospace',
                   }}
                 >
@@ -210,7 +208,7 @@ const LocationCard = ({
               </div>
             </div>
 
-            <ViewNightSkyButton />
+            <ViewNightSkyButton onClick={onClick} />
           </>
         )}
       </div>
@@ -218,9 +216,10 @@ const LocationCard = ({
   );
 };
 
-const ViewNightSkyButton = () => {
+const ViewNightSkyButton = ({ onClick }: { onClick?: () => void }) => {
   return (
     <button
+      onClick={onClick}
       style={{
         marginTop: '22px',
         width: '100%',

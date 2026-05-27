@@ -4,7 +4,7 @@ import vertexShader from '../shaders/globe/vertex.glsl';
 import type { NominatimReverseResponse } from '../types';
 import LocationCard from './LocationCard';
 import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { type ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { AdditiveBlending, BackSide, Group, type Mesh, Vector3 } from 'three';
 
@@ -42,6 +42,7 @@ const Globe = () => {
       })
       .catch((err) => {
         console.error(err);
+        setMarkedLocation({ error: 'Service Unavailable' } as NominatimReverseResponse);
       })
       .finally(() => {
         setLoadingMarkedLocation(false);
@@ -92,47 +93,62 @@ const Globe = () => {
     }
   });
 
+  const onGlobeClick = (e: ThreeEvent<MouseEvent>) => {
+    if (!globeRef.current || !introDone) {
+      return;
+    }
+
+    const localPoint = globeRef.current.worldToLocal(e.point.clone());
+    localPoint.normalize();
+
+    // marker above surface
+    const markerPosition = localPoint.clone().multiplyScalar(4.05);
+    setMarker(markerPosition);
+
+    // world direction
+    const direction = e.point.clone().normalize();
+
+    // smoother camera angle
+    const cameraPosition = direction
+      .clone()
+      .multiplyScalar(8)
+      .add(new Vector3(0.8, 0.4, 0.8));
+
+    targetCameraPosition.current.copy(cameraPosition);
+    setIsCameraMoving(true);
+
+    // lat/lng
+    const lat = Math.asin(localPoint.y) * (180 / Math.PI);
+    let lng = Math.atan2(-localPoint.x, -localPoint.z) * (180 / Math.PI);
+    lng += 90;
+    lng = ((((lng + 180) % 360) + 360) % 360) - 180;
+
+    const normal = localPoint.clone().normalize();
+    markerRef.current?.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), normal);
+    markerRef.current?.rotateX(-1.2);
+    setCoords({ lat, lon: lng });
+    setLoadingMarkedLocation(true);
+  };
+
+  const onViewSkyBtnClick = () => {
+    if (!marker) {
+      return;
+    }
+
+    const direction = marker.clone().normalize();
+
+    const zoomPosition = direction
+      .clone()
+      .multiplyScalar(4.35)
+      .add(new Vector3(0.08, 0.05, 0.08));
+
+    targetCameraPosition.current.copy(zoomPosition);
+    setIsCameraMoving(true);
+  };
+
   return (
     <>
-      <mesh
-        ref={globeRef}
-        onClick={(e) => {
-          if (!globeRef.current || !introDone) {
-            return;
-          }
-
-          const localPoint = globeRef.current.worldToLocal(e.point.clone());
-          localPoint.normalize();
-
-          // marker above surface
-          const markerPosition = localPoint.clone().multiplyScalar(4.05);
-          setMarker(markerPosition);
-
-          // world direction
-          const direction = e.point.clone().normalize();
-
-          // smoother camera angle
-          const cameraPosition = direction
-            .clone()
-            .multiplyScalar(8)
-            .add(new Vector3(0.8, 0.4, 0.8));
-
-          targetCameraPosition.current.copy(cameraPosition);
-          setIsCameraMoving(true);
-
-          // lat/lng
-          const lat = Math.asin(localPoint.y) * (180 / Math.PI);
-          let lng = Math.atan2(-localPoint.x, -localPoint.z) * (180 / Math.PI);
-          lng += 90;
-          lng = ((((lng + 180) % 360) + 360) % 360) - 180;
-
-          const normal = localPoint.clone().normalize();
-          markerRef.current?.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), normal);
-          markerRef.current?.rotateX(-1.2);
-          setCoords({ lat, lon: lng });
-          setLoadingMarkedLocation(true);
-        }}
-      >
+      <mesh ref={globeRef} onClick={onGlobeClick}>
         <sphereGeometry args={[4, 64, 64]} />
         <meshStandardMaterial map={colorMap} bumpMap={bumpMap} bumpScale={0.04} />
         {marker && (
@@ -141,7 +157,11 @@ const Globe = () => {
               <primitive object={locationPinModel.scene} />
             </mesh>
             {markedLocation && (
-              <LocationCard loading={loadingMarkedLocation} location={markedLocation} />
+              <LocationCard
+                onClick={onViewSkyBtnClick}
+                loading={loadingMarkedLocation}
+                location={markedLocation}
+              />
             )}
           </>
         )}
