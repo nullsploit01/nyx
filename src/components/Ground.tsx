@@ -1,4 +1,5 @@
 import { useLevaControls } from '../hooks/useLevaControls';
+import Grass from './Grass';
 import { useTexture } from '@react-three/drei';
 import { CuboidCollider, RigidBody } from '@react-three/rapier';
 import { DoubleSide, RepeatWrapping } from 'three';
@@ -7,7 +8,6 @@ const Ground = () => {
   const controls = useLevaControls('Ground', {
     position: [0, 0, 0] as [number, number, number],
     rotation: [Math.PI * 0.5, 0, 0] as [number, number, number],
-    color: 'green',
   });
 
   const texture = useTexture({
@@ -22,14 +22,13 @@ const Ground = () => {
     tex.wrapS = RepeatWrapping;
     tex.wrapT = RepeatWrapping;
     tex.repeat.set(10, 10);
-    // tex.center.set(0.5, 0.5);
   });
 
   return (
     <>
       <RigidBody type="fixed" colliders={false}>
         <mesh position={controls.position} rotation={controls.rotation}>
-          <planeGeometry args={[1000, 1000, 10]} />
+          <circleGeometry args={[190, 128]} />
           <meshStandardMaterial
             displacementScale={0.4}
             roughness={1}
@@ -38,6 +37,7 @@ const Ground = () => {
             side={DoubleSide}
           />
         </mesh>
+        <Grass />
         <CuboidCollider args={[1000, 5, 1000]} />
       </RigidBody>
     </>
