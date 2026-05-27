@@ -25,8 +25,8 @@ const Globe = () => {
   const [markedLocation, setMarkedLocation] = useState<NominatimReverseResponse | null>(null);
   const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
   const [colorMap, bumpMap] = useTexture([
-    './textures/earth/earth-night.jpg',
-    './textures/earth/earth-topology.png',
+    './textures/earth/8081_earthlights4k.jpg',
+    './textures/earth/8081_earthbump4k.jpg',
   ]);
 
   const locationPinModel = useGLTF('./models/pin_location/pin_location.glb');
@@ -139,8 +139,8 @@ const Globe = () => {
 
     const zoomPosition = direction
       .clone()
-      .multiplyScalar(4.35)
-      .add(new Vector3(0.08, 0.05, 0.08));
+      .multiplyScalar(4.8)
+      .add(new Vector3(0.2, 0.15, 0.2));
 
     targetCameraPosition.current.copy(zoomPosition);
     setIsCameraMoving(true);
