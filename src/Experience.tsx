@@ -13,7 +13,7 @@ const Experience = () => {
   const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
-    fetch('../public/stars.json')
+    fetch('/stars.json')
       .then((res) => res.json())
       .then((data: Star[]) => {
         setStars(data);
