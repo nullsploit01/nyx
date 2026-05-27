@@ -1,6 +1,7 @@
 import { getLocationByLatAndLng } from '../services/api/location';
 import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
+import { useGlobeStore } from '../stores/experience';
 import type { NominatimReverseResponse } from '../types';
 import LocationCard from './LocationCard';
 import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
@@ -10,6 +11,12 @@ import { AdditiveBlending, BackSide, Group, type Mesh, Vector3 } from 'three';
 
 const Globe = () => {
   const { camera } = useThree();
+
+  const coords = useGlobeStore((state) => state.coords);
+  const setCoords = useGlobeStore((state) => state.setCoords);
+  const location = useGlobeStore((state) => state.location);
+  const setLocation = useGlobeStore((state) => state.setLocation);
+  const setShowGlobe = useGlobeStore((state) => state.setShowGlobe);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
@@ -21,9 +28,8 @@ const Globe = () => {
   const [marker, setMarker] = useState<Vector3 | null>(null);
   const [introDone, setIntroDone] = useState(false);
   const [isCameraMoving, setIsCameraMoving] = useState(false);
-  const [coords, setCoords] = useState({ lat: 0, lon: 0 });
-  const [markedLocation, setMarkedLocation] = useState<NominatimReverseResponse | null>(null);
   const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
+  const [clickedViewSky, setClickedViewSky] = useState(false);
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/8081_earthlights4k.jpg',
     './textures/earth/8081_earthbump4k.jpg',
@@ -32,17 +38,17 @@ const Globe = () => {
   const locationPinModel = useGLTF('./models/pin_location/pin_location.glb');
 
   useEffect(() => {
-    if (!coords.lat && !coords.lon) {
+    if (!coords || (!coords.lat && !coords.lng)) {
       return;
     }
 
-    getLocationByLatAndLng(coords.lat, coords.lon)
+    getLocationByLatAndLng(coords.lat, coords.lng)
       .then((res) => {
-        setMarkedLocation(res.data);
+        setLocation(res.data);
       })
       .catch((err) => {
         console.error(err);
-        setMarkedLocation({ error: 'Service Unavailable' } as NominatimReverseResponse);
+        setLocation({ error: 'Service Unavailable' } as NominatimReverseResponse);
       })
       .finally(() => {
         setLoadingMarkedLocation(false);
@@ -55,7 +61,7 @@ const Globe = () => {
     }
 
     // pause rotation during camera movement
-    if (!isCameraMoving && !markedLocation) {
+    if (!isCameraMoving && !location) {
       globeRef.current.rotation.y += delta * 0.02;
     }
 
@@ -89,6 +95,7 @@ const Globe = () => {
       // finish movement
       if (camera.position.distanceTo(targetCameraPosition.current) < 0.1) {
         setIsCameraMoving(false);
+        setShowGlobe(!clickedViewSky);
       }
     }
   });
@@ -126,7 +133,7 @@ const Globe = () => {
     const normal = localPoint.clone().normalize();
     markerRef.current?.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), normal);
     markerRef.current?.rotateX(-1.2);
-    setCoords({ lat, lon: lng });
+    setCoords({ lat, lng });
     setLoadingMarkedLocation(true);
   };
 
@@ -144,6 +151,7 @@ const Globe = () => {
 
     targetCameraPosition.current.copy(zoomPosition);
     setIsCameraMoving(true);
+    setClickedViewSky(true);
   };
 
   return (
@@ -156,11 +164,11 @@ const Globe = () => {
             <mesh position={marker} ref={markerRef} scale={0.5}>
               <primitive object={locationPinModel.scene} />
             </mesh>
-            {markedLocation && (
+            {location && (
               <LocationCard
                 onClick={onViewSkyBtnClick}
                 loading={loadingMarkedLocation}
-                location={markedLocation}
+                location={location}
               />
             )}
           </>

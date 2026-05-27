@@ -4,13 +4,15 @@ import Moon from './components/Moon';
 import Player from './components/Player';
 import Props from './components/Props';
 import StarField from './components/StarField';
+import { useGlobeStore } from './stores/experience';
 import type { Star } from './types';
 import { useEffect, useState } from 'react';
 
 const Experience = () => {
+  const showGlobe = useGlobeStore((state) => state.showGlobe);
+  const coords = useGlobeStore((state) => state.coords);
+
   const [stars, setStars] = useState<Star[]>([]);
-  const [location, setLocation] = useState<GeolocationPosition | null>(null);
-  const [showGlobe, setShowGlobe] = useState(false);
 
   useEffect(() => {
     fetch('../public/stars.json')
@@ -22,20 +24,20 @@ const Experience = () => {
         console.error(err);
       });
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation(position);
-      },
-      (error) => {
-        console.error(error);
-        setShowGlobe(true);
-      },
-    );
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     setLocation(position);
+    //   },
+    //   (error) => {
+    //     console.error(error);
+    //     setShowGlobe(true);
+    //   },
+    // );
   }, []);
 
   const testData = {
-    latitude: location?.coords.latitude ?? 0,
-    longitude: location?.coords.longitude ?? 0,
+    latitude: coords?.lat ?? 0,
+    longitude: coords?.lng ?? 0,
     elevation: 310,
     date: new Date(),
   };
