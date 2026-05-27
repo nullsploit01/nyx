@@ -95,7 +95,9 @@ const Globe = () => {
       // finish movement
       if (camera.position.distanceTo(targetCameraPosition.current) < 0.1) {
         setIsCameraMoving(false);
-        setShowGlobe(!clickedViewSky);
+        if (clickedViewSky) {
+          setShowGlobe(false);
+        }
       }
     }
   });

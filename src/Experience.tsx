@@ -10,8 +10,6 @@ import { useEffect, useState } from 'react';
 
 const Experience = () => {
   const showGlobe = useGlobeStore((state) => state.showGlobe);
-  const coords = useGlobeStore((state) => state.coords);
-
   const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
@@ -23,21 +21,9 @@ const Experience = () => {
       .catch((err) => {
         console.error(err);
       });
-
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     setLocation(position);
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //     setShowGlobe(true);
-    //   },
-    // );
   }, []);
 
   const testData = {
-    latitude: coords?.lat ?? 0,
-    longitude: coords?.lng ?? 0,
     elevation: 310,
     date: new Date(),
   };

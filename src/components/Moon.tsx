@@ -1,13 +1,12 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import fragmentShader from '../shaders/moon/fragment.glsl';
 import vertexShader from '../shaders/moon/vertex.glsl';
+import { useGlobeStore } from '../stores/experience';
 import { altAzToXYZ } from '../utils';
 import * as Astronomy from 'astronomy-engine';
 import * as THREE from 'three';
 
 type MoonProps = {
-  latitude: number;
-  longitude: number;
   elevation: number;
   date: Date;
 };
@@ -18,7 +17,11 @@ const Moon = (props: MoonProps) => {
     size: 14,
   });
 
-  const observer = new Astronomy.Observer(props.latitude, props.longitude, props.elevation);
+  const coords = useGlobeStore((state) => state.coords);
+
+  if (!coords) return null;
+
+  const observer = new Astronomy.Observer(coords.lat, coords.lng, props.elevation);
   const time = new Astronomy.AstroTime(props.date);
   const moonEqu = Astronomy.Equator(Astronomy.Body.Moon, time, observer, true, true);
   const moonHor = Astronomy.Horizon(time, observer, moonEqu.ra * 15, moonEqu.dec, 'normal');

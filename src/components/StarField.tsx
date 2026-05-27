@@ -1,5 +1,6 @@
 import fragmentShader from '../shaders/stars/fragment.glsl';
 import vertexShader from '../shaders/stars/vertex.glsl';
+import { useGlobeStore } from '../stores/experience';
 import type { Star } from '../types';
 import { altAzToXYZ, colorFromCI } from '../utils';
 import * as Astronomy from 'astronomy-engine';
@@ -8,17 +9,20 @@ import * as THREE from 'three';
 
 type Props = {
   stars: Star[];
-  latitude: number;
-  longitude: number;
   elevation: number;
   date: Date;
 };
 
-const StarField = ({ latitude, longitude, elevation, date, stars }: Props) => {
+const StarField = ({ elevation, date, stars }: Props) => {
+  const coords = useGlobeStore((state) => state.coords);
+
   const geometry = useMemo(() => {
     const positions: number[] = [];
     const colors: number[] = [];
     const sizes: number[] = [];
+
+    const latitude = coords?.lat ?? 0;
+    const longitude = coords?.lng ?? 0;
 
     const observer = new Astronomy.Observer(latitude, longitude, elevation);
 
@@ -54,7 +58,7 @@ const StarField = ({ latitude, longitude, elevation, date, stars }: Props) => {
     geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
     return geometry;
-  }, [stars]);
+  }, [stars, elevation, date, coords]);
 
   return (
     <points geometry={geometry}>
