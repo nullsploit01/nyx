@@ -11,7 +11,7 @@ const parsed = Papa.parse(csv, {
 const filtered = parsed
   .filter((star) => {
     const mag = Number(star.mag);
-    return !isNaN(mag) && mag <= 4.5;
+    return !isNaN(mag) && mag >= -1.2 && mag <= 4.5;
   })
   .map((star) => [
     Number(star.ra),
