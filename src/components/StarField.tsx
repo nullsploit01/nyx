@@ -6,7 +6,7 @@ import type { Star } from '../types';
 import { altAzToXYZ, colorFromCI } from '../utils';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as Astronomy from 'astronomy-engine';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 type Props = {
@@ -22,28 +22,16 @@ const StarField = ({ elevation, date, stars }: Props) => {
   });
 
   const coords = useGlobeStore((state) => state.coords);
-  const [telescopeMode, setTelescopeMode] = useState(false);
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
 
   const { camera } = useThree();
   const perspectiveCamera = camera as THREE.PerspectiveCamera;
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'h') {
-        const nextTelescopeMode = perspectiveCamera.fov !== controls.telescopeFov;
-        perspectiveCamera.fov = nextTelescopeMode ? controls.telescopeFov : 90;
-        perspectiveCamera.updateProjectionMatrix();
-        setTelescopeMode(nextTelescopeMode);
-      }
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [camera]);
+    perspectiveCamera.fov = telescopeMode ? controls.telescopeFov : 90;
+    perspectiveCamera.updateProjectionMatrix();
+  }, [telescopeMode]);
 
   useFrame(() => {
     if (!materialRef.current) {

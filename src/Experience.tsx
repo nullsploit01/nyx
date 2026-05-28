@@ -37,7 +37,6 @@ const Experience = () => {
         //   <Ground />
         //   <Props />
         // </>
-        // <Ground />
         <>
           <Moon {...testData} />
           <Ground />

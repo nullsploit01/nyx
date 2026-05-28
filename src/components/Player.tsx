@@ -1,4 +1,5 @@
 import { useLevaControls } from '../hooks/useLevaControls';
+import { useGlobeStore } from '../stores/experience';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { CuboidCollider } from '@react-three/rapier';
 import Ecctrl from 'ecctrl';
@@ -8,6 +9,7 @@ const Player = () => {
   const model = useGLTF('./models/ghost/ghost.glb');
 
   const animations = useAnimations(model.animations, model.scene);
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
 
   const controls = useLevaControls('Player', {
     position: [-1.3, 11.3, 36] as [number, number, number],
@@ -35,13 +37,14 @@ const Player = () => {
         camCollision={false}
         camInitDis={-0.01}
         camMinDis={-0.01}
-        camFollowMult={1000}
-        camLerpMult={1000}
+        camFollowMult={telescopeMode ? 0 : 1000}
+        camLerpMult={telescopeMode ? 0 : 1000}
         turnVelMultiplier={1}
         turnSpeed={10}
         mode="CameraBasedMovement"
         maxVelLimit={40}
-        disableFollowCam={controls.disableControls}
+        disableFollowCam={controls.disableControls || telescopeMode}
+        disableControl={controls.disableControls || telescopeMode}
         jumpVel={0}
         camInitDir={{ x: 0, y: Math.PI }}
       >

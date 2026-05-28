@@ -1,9 +1,13 @@
 import { useLevaControls } from '../hooks/useLevaControls';
-import { Html, useCursor, useGLTF } from '@react-three/drei';
-import { useState } from 'react';
+import { useGlobeStore } from '../stores/experience';
+import { CameraControls, Html, useCursor, useGLTF } from '@react-three/drei';
+import { useEffect, useRef, useState } from 'react';
+import { Euler, Vector3 } from 'three';
 
 const Telescope = () => {
   const [hovered, setHovered] = useState(false);
+  const setTelescopeMode = useGlobeStore((state) => state.setTelescopeMode);
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
 
   const controls = useLevaControls('Telescope', {
     position: {
@@ -14,19 +18,55 @@ const Telescope = () => {
     scale: 0.1,
   });
 
+  const cameraControlsRef = useRef<CameraControls>(null);
+
+  useEffect(() => {
+    if (!telescopeMode || !cameraControlsRef.current) {
+      return;
+    }
+
+    const position = new Vector3(
+      controls.position[0],
+      controls.position[1] + 4,
+      controls.position[2],
+    );
+
+    const forward = new Vector3(0, 0, -1);
+
+    forward.applyEuler(
+      new Euler(controls.rotation[0], controls.rotation[1], controls.rotation[2], 'YXZ'),
+    );
+
+    const target = position.clone().add(forward.multiplyScalar(100));
+
+    cameraControlsRef.current.setLookAt(
+      position.x,
+      position.y,
+      position.z,
+
+      target.x,
+      target.y,
+      target.z,
+
+      true,
+    );
+  }, [telescopeMode]);
+
   const model = useGLTF('./models/telescope/telescope.glb');
   useCursor(hovered, 'pointer');
   return (
     <>
       <group
+        visible={!telescopeMode}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         position={controls.position}
         rotation={controls.rotation}
+        onClick={() => setTelescopeMode(true)}
       >
         <primitive scale={controls.scale} object={model.scene} />
 
-        <Html occlude position={[0, 12, 0]} center scale={10}>
+        <Html visible={!telescopeMode} occlude position={[0, 12, 0]} center scale={10}>
           <div
             style={{
               padding: '10px 16px',
@@ -68,6 +108,19 @@ const Telescope = () => {
             </span>
           </div>
         </Html>
+        <CameraControls
+          ref={cameraControlsRef}
+          enabled={telescopeMode}
+          smoothTime={1.2}
+          minDistance={1}
+          maxDistance={1}
+          truckSpeed={0}
+          dollySpeed={0}
+          polarRotateSpeed={0.08}
+          azimuthRotateSpeed={0.18}
+          minPolarAngle={0.8}
+          maxPolarAngle={3.4}
+        />
       </group>
     </>
   );

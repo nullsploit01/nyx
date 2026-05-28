@@ -13,6 +13,8 @@ type GlobeStore = {
   setCoords: (coords: Coordinates | null) => void;
   location: NominatimReverseResponse | null;
   setLocation: (location: NominatimReverseResponse | null) => void;
+  telescopeMode: boolean;
+  setTelescopeMode: (telescopeMode: boolean) => void;
 };
 
 export const useGlobeStore = create<GlobeStore>((set) => ({
@@ -32,5 +34,11 @@ export const useGlobeStore = create<GlobeStore>((set) => ({
   setLocation: (location) =>
     set({
       location,
+    }),
+
+  telescopeMode: false,
+  setTelescopeMode: (telescopeMode) =>
+    set({
+      telescopeMode,
     }),
 }));
