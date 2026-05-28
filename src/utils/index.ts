@@ -1,3 +1,4 @@
+import type { VisibleStar } from '../types';
 import { Color, MathUtils } from 'three';
 import tzLookup from 'tz-lookup';
 
@@ -108,4 +109,122 @@ export const getSpectralDescription = (spectral: string) => {
     default:
       return spectral;
   }
+};
+
+export const getVisibilityText = (magnitude: number) => {
+  if (magnitude < 0) {
+    return 'Extremely bright';
+  }
+
+  if (magnitude < 1) {
+    return 'Very bright';
+  }
+
+  if (magnitude < 2.5) {
+    return 'Bright';
+  }
+
+  if (magnitude < 4) {
+    return 'Visible';
+  }
+
+  return 'Faint';
+};
+
+export const getStarDescription = (spectral: string) => {
+  if (!spectral) {
+    return 'Unknown star';
+  }
+
+  const type = spectral[0];
+
+  const luminosity = spectral.includes('I')
+    ? 'supergiant'
+    : spectral.includes('III')
+      ? 'giant'
+      : spectral.includes('V')
+        ? 'main-sequence star'
+        : 'star';
+
+  switch (type) {
+    case 'O':
+      return `Blue ${luminosity}`;
+
+    case 'B':
+      return `Blue-white ${luminosity}`;
+
+    case 'A':
+      return `White ${luminosity}`;
+
+    case 'F':
+      return `Yellow-white ${luminosity}`;
+
+    case 'G':
+      return `Yellow ${luminosity}`;
+
+    case 'K':
+      return `Orange ${luminosity}`;
+
+    case 'M':
+      return `Red ${luminosity}`;
+
+    default:
+      return spectral;
+  }
+};
+
+export const getStarAtmosphereText = (star: VisibleStar) => {
+  if (star.magnitude < 1) {
+    return 'One of the brighter stars visible in the night sky.';
+  }
+
+  if (star.spectral?.includes('I')) {
+    return 'A massive luminous star nearing the final stages of its life.';
+  }
+
+  if (star.distance < 20) {
+    return 'Relatively close to our solar system.';
+  }
+
+  return 'A distant stellar light drifting through the darkness of space.';
+};
+
+export const getSpectralGlow = (spectral: string) => {
+  if (spectral?.startsWith('O') || spectral?.startsWith('B')) {
+    return `
+      radial-gradient(
+        circle at top right,
+        rgba(120,170,255,0.16),
+        transparent 60%
+      )
+    `;
+  }
+
+  if (spectral?.startsWith('M')) {
+    return `
+      radial-gradient(
+        circle at top right,
+        rgba(255,120,120,0.12),
+        transparent 60%
+      )
+    `;
+  }
+
+  if (spectral?.startsWith('K')) {
+    return `
+      radial-gradient(
+        circle at top right,
+        rgba(255,180,120,0.12),
+        transparent 60%
+      )
+    `;
+  }
+
+  return `
+    radial-gradient(
+      circle at top right,
+      rgba(255,255,255,0.08),
+      transparent 60%
+    )
+  `;
 };

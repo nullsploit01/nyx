@@ -1,3 +1,5 @@
+import type { Vector3 } from 'three';
+
 export type Star = [
   ra: number,
   dec: number,
@@ -38,4 +40,13 @@ export type NominatimReverseResponse = {
   };
   boundingbox: [string, string, string, string];
   error?: string;
+};
+
+export type VisibleStar = {
+  name: string;
+  constellation: string;
+  magnitude: number;
+  distance: number;
+  spectral: string;
+  worldPosition: Vector3;
 };

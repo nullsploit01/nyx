@@ -2,8 +2,15 @@ import { useLevaControls } from '../hooks/useLevaControls';
 import fragmentShader from '../shaders/stars/fragment.glsl';
 import vertexShader from '../shaders/stars/vertex.glsl';
 import { useGlobeStore } from '../stores/experience';
-import type { Star } from '../types';
-import { altAzToXYZ, colorFromCI, getSpectralDescription } from '../utils';
+import type { Star, VisibleStar } from '../types';
+import {
+  altAzToXYZ,
+  colorFromCI,
+  getSpectralGlow,
+  getStarAtmosphereText,
+  getStarDescription,
+  getVisibilityText,
+} from '../utils';
 import { Html } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as Astronomy from 'astronomy-engine';
@@ -14,15 +21,6 @@ type Props = {
   stars: Star[];
   elevation: number;
   date: Date;
-};
-
-type VisibleStar = {
-  name: string;
-  constellation: string;
-  magnitude: number;
-  distance: number;
-  spectral: string;
-  worldPosition: THREE.Vector3;
 };
 
 const StarField = ({ elevation, date, stars }: Props) => {
@@ -118,7 +116,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
       const size = Math.max(0.08, Math.pow(brightness, 0.9) * 15);
       sizes.push(size);
       visibleStars.push({
-        name: proper || 'Unnamed Star',
+        name: proper || `${con} ${spect}` || 'Catalog Star',
         constellation: con || 'Unknown',
         magnitude: mag,
         distance: dist,
@@ -164,38 +162,32 @@ const StarField = ({ elevation, date, stars }: Props) => {
         >
           <div
             style={{
-              transform: 'translate3d(44px, -50%, 0)',
-              minWidth: '220px',
-              padding: '16px 18px',
-              borderRadius: '22px',
-              background: 'rgba(6,10,18,0.42)',
-              border: '1px solid rgba(255,255,255,0.06)',
-              backdropFilter: 'blur(24px)',
+              minWidth: '240px',
+              padding: '18px 20px',
+              borderRadius: '24px',
+              background: 'rgba(5,8,16,0.34)',
+              backdropFilter: 'blur(30px)',
+              border: '1px solid rgba(255,255,255,0.05)',
+              transform: 'translate3d(48px,-50%,0)',
               boxShadow: `
-                0 0 60px rgba(120,180,255,0.06),
-                inset 0 0 0 1px rgba(255,255,255,0.02)
+                0 0 80px rgba(120,180,255,0.06),
+                inset 0 0 0 1px rgba(255,255,255,0.015)
               `,
               color: 'white',
               fontFamily: 'Inter, sans-serif',
-              pointerEvents: 'none',
               overflow: 'hidden',
+              position: 'relative',
             }}
           >
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                background:
-                  hoveredStar.spectral?.startsWith('O') || hoveredStar.spectral?.startsWith('B')
-                    ? 'radial-gradient(circle at top right, rgba(120,170,255,0.18), transparent 60%)'
-                    : hoveredStar.spectral?.startsWith('M')
-                      ? 'radial-gradient(circle at top right, rgba(255,120,120,0.15), transparent 60%)'
-                      : 'radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 60%)',
-
+                background: getSpectralGlow(hoveredStar.spectral),
+                opacity: 0.55,
                 pointerEvents: 'none',
               }}
             />
-
             <div
               style={{
                 position: 'relative',
@@ -204,10 +196,10 @@ const StarField = ({ elevation, date, stars }: Props) => {
             >
               <div
                 style={{
-                  fontSize: '0.72rem',
+                  fontSize: '0.68rem',
                   letterSpacing: '0.24em',
                   textTransform: 'uppercase',
-                  color: 'rgba(180,200,255,0.45)',
+                  color: 'rgba(180,200,255,0.38)',
                 }}
               >
                 {hoveredStar.constellation}
@@ -215,23 +207,36 @@ const StarField = ({ elevation, date, stars }: Props) => {
               <h2
                 style={{
                   margin: '10px 0 0',
-                  fontSize: '1.5rem',
+                  fontSize: '1.85rem',
                   lineHeight: 1,
                   fontWeight: 700,
-                  letterSpacing: '-0.04em',
+                  letterSpacing: '-0.05em',
                 }}
               >
                 {hoveredStar.name}
               </h2>
+
               <div
                 style={{
-                  marginTop: '10px',
-                  color: 'rgba(210,220,255,0.7)',
-                  fontSize: '0.95rem',
+                  marginTop: '12px',
+                  color: 'rgba(220,230,255,0.76)',
+                  fontSize: '1rem',
                 }}
               >
-                {getSpectralDescription(hoveredStar.spectral)}
+                {getStarDescription(hoveredStar.spectral)}
               </div>
+
+              <div
+                style={{
+                  marginTop: '14px',
+                  color: 'rgba(190,205,255,0.58)',
+                  lineHeight: 1.6,
+                  fontSize: '0.92rem',
+                }}
+              >
+                {getStarAtmosphereText(hoveredStar)}
+              </div>
+
               <div
                 style={{
                   marginTop: '18px',
@@ -239,12 +244,13 @@ const StarField = ({ elevation, date, stars }: Props) => {
                   background: 'rgba(255,255,255,0.05)',
                 }}
               />
+
               <div
                 style={{
                   marginTop: '16px',
                   display: 'flex',
                   justifyContent: 'space-between',
-                  gap: '18px',
+                  alignItems: 'flex-end',
                 }}
               >
                 <div>
@@ -253,41 +259,47 @@ const StarField = ({ elevation, date, stars }: Props) => {
                       fontSize: '0.68rem',
                       letterSpacing: '0.18em',
                       textTransform: 'uppercase',
-                      color: 'rgba(160,180,220,0.45)',
+                      color: 'rgba(160,180,220,0.42)',
                     }}
                   >
                     Distance
-                  </div>
-                  <div
-                    style={{
-                      marginTop: '6px',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {hoveredStar.distance.toFixed(1)} ly
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: '0.68rem',
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(160,180,220,0.45)',
-                    }}
-                  >
-                    Magnitude
                   </div>
 
                   <div
                     style={{
                       marginTop: '6px',
-                      fontSize: '1rem',
+                      fontSize: '1.02rem',
                       fontWeight: 600,
                     }}
                   >
-                    {hoveredStar.magnitude.toFixed(2)}
+                    {hoveredStar.distance.toFixed(1)} light years
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    textAlign: 'right',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: '0.68rem',
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(160,180,220,0.42)',
+                    }}
+                  >
+                    Visibility
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: '6px',
+                      fontSize: '1.02rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {getVisibilityText(hoveredStar.magnitude)}
                   </div>
                 </div>
               </div>
