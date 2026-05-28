@@ -1,4 +1,5 @@
 import Camp from './Camp';
+import Telescope from './Telescope';
 import Tree from './Tree';
 
 const Props = () => {
@@ -6,6 +7,7 @@ const Props = () => {
     <>
       <Tree />
       <Camp />
+      <Telescope />
       <fog attach="fog" args={['#000000', 200, 900]} />
     </>
   );

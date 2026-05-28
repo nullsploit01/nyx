@@ -9,3 +9,5 @@
 "map pin, location pin" (https://skfb.ly/oPYSZ) by bashgod is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Grass": https://jsfiddle.net/felixmariotto/hvrg721n/
+
+"Telescope" (https://skfb.ly/VouR) by Francesco Coldesina is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

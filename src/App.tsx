@@ -17,7 +17,7 @@ const App = () => {
     directionalLight: true,
     directionalLightIntensity: 1,
     directionalLightColor: 'white',
-    enableOrbitControls: false,
+    enableOrbitControls: true,
   });
 
   return (
