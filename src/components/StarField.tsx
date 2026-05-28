@@ -1,10 +1,12 @@
+import { useLevaControls } from '../hooks/useLevaControls';
 import fragmentShader from '../shaders/stars/fragment.glsl';
 import vertexShader from '../shaders/stars/vertex.glsl';
 import { useGlobeStore } from '../stores/experience';
 import type { Star } from '../types';
 import { altAzToXYZ, colorFromCI } from '../utils';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as Astronomy from 'astronomy-engine';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 type Props = {
@@ -14,7 +16,46 @@ type Props = {
 };
 
 const StarField = ({ elevation, date, stars }: Props) => {
+  const controls = useLevaControls('StarField', {
+    telescopeFov: 40,
+    telescopeZoom: 1.0,
+  });
+
   const coords = useGlobeStore((state) => state.coords);
+  const [telescopeMode, setTelescopeMode] = useState(false);
+
+  const { camera } = useThree();
+  const perspectiveCamera = camera as THREE.PerspectiveCamera;
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === 'h') {
+        const nextTelescopeMode = perspectiveCamera.fov !== controls.telescopeFov;
+        perspectiveCamera.fov = nextTelescopeMode ? controls.telescopeFov : 90;
+        perspectiveCamera.updateProjectionMatrix();
+        setTelescopeMode(nextTelescopeMode);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [camera]);
+
+  useFrame(() => {
+    if (!materialRef.current) {
+      return;
+    }
+
+    materialRef.current.uniforms.telescopeZoom.value = THREE.MathUtils.lerp(
+      materialRef.current.uniforms.telescopeZoom.value,
+      telescopeMode ? 40 : 1,
+      0.8,
+    );
+  });
 
   const geometry = useMemo(() => {
     const positions: number[] = [];
@@ -63,6 +104,12 @@ const StarField = ({ elevation, date, stars }: Props) => {
   return (
     <points geometry={geometry}>
       <shaderMaterial
+        ref={materialRef}
+        uniforms={{
+          telescopeZoom: {
+            value: controls.telescopeZoom,
+          },
+        }}
         transparent={true}
         depthWrite={false}
         vertexColors={true}
