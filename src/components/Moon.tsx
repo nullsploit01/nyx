@@ -29,7 +29,7 @@ const Moon = (props: MoonProps) => {
   const [x, y, z] = altAzToXYZ(moonHor.altitude, moonHor.azimuth, 490);
 
   return (
-    <points position={[x, y, z]}>
+    <points position={[x, -y, z]}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[new Float32Array([0, 0, 0]), 3]} />
       </bufferGeometry>

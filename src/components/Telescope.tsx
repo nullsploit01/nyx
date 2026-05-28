@@ -26,7 +26,7 @@ const Telescope = () => {
       >
         <primitive scale={controls.scale} object={model.scene} />
 
-        <Html position={[0, 12, 0]} center scale={10}>
+        <Html occlude position={[0, 12, 0]} center scale={10}>
           <div
             style={{
               padding: '10px 16px',

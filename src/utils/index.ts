@@ -1,4 +1,4 @@
-import { Color } from 'three';
+import { Color, MathUtils } from 'three';
 import tzLookup from 'tz-lookup';
 
 export const raDecToXYZ = (ra: number, dec: number, radius = 100): [number, number, number] => {
@@ -11,14 +11,18 @@ export const raDecToXYZ = (ra: number, dec: number, radius = 100): [number, numb
 };
 
 export const altAzToXYZ = (alt: number, az: number, radius = 500): [number, number, number] => {
-  const altRad = (alt * Math.PI) / 180;
-  const azRad = ((az - 180) * Math.PI) / 180;
-  const x = radius * Math.cos(altRad) * Math.cos(azRad);
+  const altRad = MathUtils.degToRad(alt);
+
+  const azRad = MathUtils.degToRad(az);
+
+  const x = radius * Math.cos(altRad) * Math.sin(azRad);
+
   const y = radius * Math.sin(altRad);
-  const z = radius * Math.cos(altRad) * Math.sin(azRad);
+
+  const z = radius * Math.cos(altRad) * Math.cos(azRad);
+
   return [x, y, z];
 };
-
 export const colorFromCI = (ci: number) => {
   if (ci < 0) {
     return new Color('#9bbcff');
