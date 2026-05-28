@@ -75,3 +75,37 @@ export const getLocationTime = (lat: number, lng: number): LocationTimeData => {
     date,
   };
 };
+
+export const getSpectralDescription = (spectral: string) => {
+  if (!spectral) {
+    return 'Unknown star';
+  }
+
+  const type = spectral[0];
+
+  switch (type) {
+    case 'O':
+      return 'Blue hypergiant';
+
+    case 'B':
+      return 'Blue-white giant';
+
+    case 'A':
+      return 'White main-sequence star';
+
+    case 'F':
+      return 'Yellow-white star';
+
+    case 'G':
+      return 'Yellow dwarf';
+
+    case 'K':
+      return 'Orange dwarf';
+
+    case 'M':
+      return 'Red dwarf';
+
+    default:
+      return spectral;
+  }
+};
