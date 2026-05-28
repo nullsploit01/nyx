@@ -29,25 +29,33 @@ void main() {
     vec3 normal = normalize(vec3(uv, pow(1.0 - r, 0.2)));
 
     // light direction
-    vec3 lightDir = normalize(vec3(phase, 0.0, 0.12));
+    float phaseRad = radians(phase);
+
+    vec3 lightDir = normalize(vec3(-cos(phaseRad), 0.0, 0.25));
 
     // diffuse lighting
-    float diffuse = max(dot(normal, lightDir), 0.0);  
-    float sphereShade = normal.z * 0.15 + 0.85;
+    float illumination = (1.0 - cos(phaseRad)) * 0.5;
+
+    float curve =   sqrt(max(0.0, 1.0 - uv.y * uv.y)) * abs(sin(phaseRad)) * 0.12;
+
+    float terminator =
+        uv.x -
+        curve +
+        (illumination * 2.0 - 1.0);
+
+    float diffuse = smoothstep(-0.16, 0.16, terminator);
+    float sphereShade = pow(normal.z, 0.7) * 0.35 + 0.65;
     diffuse *= sphereShade;
 
-    float ambient = (1.0 - abs(phase)) * 0.02;
+    float ambient = 0.02;
     diffuse = max(diffuse, ambient);
-
-    // soften terminator
-    diffuse = smoothstep(0.0, 0.07, diffuse);
 
     // subtle rim glow
     float edge = 1.0 - smoothstep(0.85, 1.0, sqrt(r));
 
     // only glow on lit side
     float glow = edge * pow(diffuse, 2.0) * 0.03;
-    vec3 baseColor = mix(vec3(0.72), moonColor, 0.35);
+    vec3 baseColor = mix(vec3(0.58), moonColor, 0.42);
 
     float halo = 1.0 - smoothstep(0.6, 2.5, length(uv));
     halo *= pow(diffuse, 0.7) * 0.18;
@@ -76,12 +84,7 @@ void main() {
     maria += circle(mariaUv, vec2(0.05, 0.26), 0.07);
     maria += circle(mariaUv, vec2(0.32, -0.08), 0.06);
     maria += circle(mariaUv, vec2(-0.36, 0.04), 0.05);
-    maria +=
-    circle(
-        mariaUv,
-        vec2(0.0, 0.0),
-        0.42
-    ) * 0.18;
+    maria += circle(mariaUv, vec2(0.0, 0.0), 0.42) * 0.18;
     maria *= 0.85 + noise * 0.3;
     maria = clamp(maria, 0.0, 0.8);
 

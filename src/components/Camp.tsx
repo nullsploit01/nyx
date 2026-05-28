@@ -4,7 +4,7 @@ import { RigidBody } from '@react-three/rapier';
 
 const Camp = () => {
   const controls = useLevaControls('Camp', {
-    position: [-2, 0.4, 25] as [number, number, number],
+    position: [-2, 1.2, 25] as [number, number, number],
     rotation: [0, 1.75, 0] as [number, number, number],
     scale: 10,
   });

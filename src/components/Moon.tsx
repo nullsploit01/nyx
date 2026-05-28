@@ -26,7 +26,6 @@ const Moon = (props: MoonProps) => {
   const moonEqu = Astronomy.Equator(Astronomy.Body.Moon, time, observer, true, true);
   const moonHor = Astronomy.Horizon(time, observer, moonEqu.ra * 15, moonEqu.dec, 'normal');
   const phase = Astronomy.MoonPhase(time);
-  const phaseLight = -Math.cos((phase * Math.PI) / 180);
   const [x, y, z] = altAzToXYZ(moonHor.altitude, moonHor.azimuth, 490);
 
   return (
@@ -40,7 +39,7 @@ const Moon = (props: MoonProps) => {
         blending={THREE.AdditiveBlending}
         uniforms={{
           phase: {
-            value: phaseLight,
+            value: phase,
           },
           moonColor: {
             value: new THREE.Color(controls.color),

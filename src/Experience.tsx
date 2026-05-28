@@ -1,4 +1,5 @@
 // import Globe from './components/Globe';
+import Globe from './components/Globe';
 import Ground from './components/Ground';
 import Moon from './components/Moon';
 import Player from './components/Player';
@@ -31,9 +32,9 @@ const Experience = () => {
   return (
     <>
       {showGlobe ? (
-        // <Globe />
-        <Ground />
+        <Globe />
       ) : (
+        // <Ground />
         <>
           <Moon {...testData} />
           <Ground />
