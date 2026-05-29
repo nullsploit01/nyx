@@ -108,19 +108,21 @@ const Telescope = () => {
             </span>
           </div>
         </Html>
-        <CameraControls
-          ref={cameraControlsRef}
-          enabled={telescopeMode}
-          smoothTime={1.2}
-          minDistance={1}
-          maxDistance={1}
-          truckSpeed={0}
-          dollySpeed={0}
-          polarRotateSpeed={0.08}
-          azimuthRotateSpeed={0.18}
-          minPolarAngle={0.8}
-          maxPolarAngle={3.4}
-        />
+        {telescopeMode && (
+          <CameraControls
+            ref={cameraControlsRef}
+            enabled={telescopeMode}
+            smoothTime={1.2}
+            minDistance={1}
+            maxDistance={1}
+            truckSpeed={0}
+            dollySpeed={0}
+            polarRotateSpeed={0.08}
+            azimuthRotateSpeed={0.18}
+            minPolarAngle={0.8}
+            maxPolarAngle={3.4}
+          />
+        )}
       </group>
     </>
   );
