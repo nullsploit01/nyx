@@ -189,6 +189,36 @@ export const getStarAtmosphereText = (star: VisibleStar) => {
   return 'A distant stellar light drifting through the darkness of space.';
 };
 
+export const getStarColor = (spectral: string) => {
+  const type = spectral?.[0]?.toUpperCase();
+
+  switch (type) {
+    case 'O':
+      return 'Blue';
+
+    case 'B':
+      return 'Blue-white';
+
+    case 'A':
+      return 'White';
+
+    case 'F':
+      return 'Yellow-white';
+
+    case 'G':
+      return 'Yellow';
+
+    case 'K':
+      return 'Orange';
+
+    case 'M':
+      return 'Red';
+
+    default:
+      return 'Unknown';
+  }
+};
+
 export const formatDistance = (ly: number) => {
   if (ly < 100) {
     return `${ly.toFixed(1)} light years`;

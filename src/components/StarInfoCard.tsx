@@ -13,7 +13,7 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
     <Html position={[star.worldPosition.x, star.worldPosition.y, star.worldPosition.z]}>
       <div
         style={{
-          minWidth: '240px',
+          minWidth: '260px',
           padding: '18px 20px',
           borderRadius: '24px',
           background: 'rgba(5,8,16,0.34)',
@@ -21,9 +21,9 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
           border: '1px solid rgba(255,255,255,0.05)',
           transform: 'translate3d(48px,-50%,0)',
           boxShadow: `
-                0 0 80px rgba(120,180,255,0.06),
-                inset 0 0 0 1px rgba(255,255,255,0.015)
-              `,
+            0 0 80px rgba(120,180,255,0.06),
+            inset 0 0 0 1px rgba(255,255,255,0.015)
+          `,
           color: 'white',
           fontFamily: 'Inter, sans-serif',
           overflow: 'hidden',
@@ -39,6 +39,7 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
             pointerEvents: 'none',
           }}
         />
+
         <div
           style={{
             position: 'relative',
@@ -55,10 +56,11 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
           >
             {star.constellation}
           </div>
+
           <h2
             style={{
               margin: '10px 0 0',
-              fontSize: '1.85rem',
+              fontSize: '1.7rem',
               lineHeight: 1,
               fontWeight: 700,
               letterSpacing: '-0.05em',
@@ -66,6 +68,18 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
           >
             {star.name}
           </h2>
+
+          {star.designation && (
+            <div
+              style={{
+                marginTop: '6px',
+                fontSize: '0.82rem',
+                color: 'rgba(190,205,255,0.55)',
+              }}
+            >
+              {star.designation}
+            </div>
+          )}
 
           <div
             style={{
@@ -79,10 +93,10 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
 
           <div
             style={{
-              marginTop: '14px',
+              marginTop: '12px',
               color: 'rgba(190,205,255,0.58)',
-              lineHeight: 1.6,
-              fontSize: '0.92rem',
+              lineHeight: 1.55,
+              fontSize: '0.9rem',
             }}
           >
             {getStarAtmosphereText(star)}
@@ -99,65 +113,54 @@ const StarInfoCard = ({ star }: { star: VisibleStar }) => {
           <div
             style={{
               marginTop: '16px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '14px 24px',
             }}
           >
-            <div>
-              <div
-                style={{
-                  fontSize: '0.68rem',
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(160,180,220,0.42)',
-                }}
-              >
-                Distance
-              </div>
+            <InfoItem label="Distance" value={formatDistance(star.distance)} />
+            <InfoItem label="Visibility" value={getVisibilityText(star.magnitude)} />
 
-              <div
-                style={{
-                  marginTop: '6px',
-                  fontSize: '1.02rem',
-                  fontWeight: 600,
-                }}
-              >
-                {formatDistance(star.distance)}
-              </div>
-            </div>
+            <InfoItem
+              label="Luminosity"
+              value={
+                star.luminosity > 0
+                  ? `${Math.round(star.luminosity).toLocaleString()}× Sun`
+                  : 'Unknown'
+              }
+            />
 
-            <div
-              style={{
-                textAlign: 'right',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '0.68rem',
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(160,180,220,0.42)',
-                }}
-              >
-                Visibility
-              </div>
-
-              <div
-                style={{
-                  marginTop: '6px',
-                  fontSize: '1.02rem',
-                  fontWeight: 600,
-                }}
-              >
-                {getVisibilityText(star.magnitude)}
-              </div>
-            </div>
+            <InfoItem label="Type" value={getStarDescription(star.spectral)} />
           </div>
         </div>
       </div>
     </Html>
   );
 };
+
+const InfoItem = ({ label, value }: { label: string; value: string }) => (
+  <div>
+    <div
+      style={{
+        fontSize: '0.68rem',
+        letterSpacing: '0.18em',
+        textTransform: 'uppercase',
+        color: 'rgba(160,180,220,0.42)',
+      }}
+    >
+      {label}
+    </div>
+
+    <div
+      style={{
+        marginTop: '4px',
+        fontSize: '0.95rem',
+        fontWeight: 600,
+      }}
+    >
+      {value}
+    </div>
+  </div>
+);
 
 export default StarInfoCard;

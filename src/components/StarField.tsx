@@ -92,7 +92,8 @@ const StarField = ({ elevation, date, stars }: Props) => {
     const time = new Astronomy.AstroTime(date);
 
     stars.forEach((star) => {
-      const [ra, dec, mag, ci, proper, dist, spect, con] = star;
+      const [ra, dec, mag, ci, proper, dist, spect, con, absmag, lum, bayer, flam, variable, rv] =
+        star;
       const horizontal = Astronomy.Horizon(time, observer, ra * 15, dec, 'normal');
 
       // hide stars below horizon
@@ -106,15 +107,19 @@ const StarField = ({ elevation, date, stars }: Props) => {
       color.lerp(new THREE.Color('white'), 0.65);
       colors.push(color.r, color.g, color.b);
       const brightness = Math.pow(10, -0.4 * mag);
-      const distanceLightYears = dist * 3.26156;
       const size = Math.max(0.08, Math.pow(brightness, 0.9) * 15);
       sizes.push(size);
       visibleStars.push({
-        name: proper || `${con} ${spect}` || 'Catalog Star',
+        name: proper || `${bayer} ${con}` || `${flam} ${con}` || 'Catalog Star',
+        designation: bayer ? `${bayer} ${con}` : flam ? `${flam} ${con}` : '',
         constellation: con || 'Unknown',
         magnitude: mag,
-        distance: distanceLightYears,
+        distance: dist * 3.26156,
         spectral: spect || 'Unknown',
+        luminosity: lum,
+        absoluteMagnitude: absmag,
+        variable: variable,
+        radialVelocity: rv,
         worldPosition: new THREE.Vector3(x, y, z),
       });
     });

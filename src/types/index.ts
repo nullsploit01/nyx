@@ -5,10 +5,16 @@ export type Star = [
   dec: number,
   mag: number,
   ci: number,
-  name: string,
+  proper: string,
   dist: number,
   spect: string,
   con: string,
+  absmag: number,
+  lum: number,
+  bayer: string,
+  flam: number,
+  variable: string,
+  rv: number,
 ];
 
 export type NominatimReverseResponse = {
@@ -44,9 +50,14 @@ export type NominatimReverseResponse = {
 
 export type VisibleStar = {
   name: string;
+  designation: string;
   constellation: string;
   magnitude: number;
   distance: number;
   spectral: string;
+  luminosity: number;
+  absoluteMagnitude: number;
+  variable: string;
+  radialVelocity: number;
   worldPosition: Vector3;
 };
