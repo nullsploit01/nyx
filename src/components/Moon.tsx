@@ -12,9 +12,9 @@ type MoonProps = {
 };
 
 const Moon = (props: MoonProps) => {
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
   const controls = useLevaControls('Moon', {
     color: '#e1ddd1',
-    size: 14,
   });
 
   const coords = useGlobeStore((state) => state.coords);
@@ -47,6 +47,9 @@ const Moon = (props: MoonProps) => {
           },
           tilt: {
             value: THREE.MathUtils.degToRad(moonHor.azimuth - 180) * 0.35,
+          },
+          sizeMultiplier: {
+            value: telescopeMode ? 3.5 : 1,
           },
         }}
         vertexColors={true}

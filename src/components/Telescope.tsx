@@ -66,48 +66,50 @@ const Telescope = () => {
       >
         <primitive scale={controls.scale} object={model.scene} />
 
-        <Html visible={!telescopeMode} occlude position={[0, 12, 0]} center scale={10}>
-          <div
-            style={{
-              padding: '10px 16px',
-              borderRadius: '999px',
-              background: 'rgba(4,8,18,0.38)',
-              border: '1px solid rgba(180,220,255,0.08)',
-              backdropFilter: 'blur(18px)',
-              boxShadow: `
+        {!telescopeMode && (
+          <Html occlude position={[0, 12, 0]} center scale={10}>
+            <div
+              style={{
+                padding: '10px 16px',
+                borderRadius: '999px',
+                background: 'rgba(4,8,18,0.38)',
+                border: '1px solid rgba(180,220,255,0.08)',
+                backdropFilter: 'blur(18px)',
+                boxShadow: `
                     0 0 40px rgba(120,180,255,0.06),
                     0 0 100px rgba(120,180,255,0.02)
                 `,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              color: 'rgba(235,245,255,0.92)',
-              fontFamily: 'Inter, sans-serif',
-              whiteSpace: 'nowrap',
-              pointerEvents: 'none',
-              transform: 'translateY(-6px)',
-            }}
-          >
-            <div
-              style={{
-                width: '7px',
-                height: '7px',
-                borderRadius: '999px',
-                background: '#dbeafe',
-                boxShadow: '0 0 14px rgba(255,255,255,0.7)',
-              }}
-            />
-
-            <span
-              style={{
-                fontSize: '0.9rem',
-                letterSpacing: '0.01em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                color: 'rgba(235,245,255,0.92)',
+                fontFamily: 'Inter, sans-serif',
+                whiteSpace: 'nowrap',
+                pointerEvents: 'none',
+                transform: 'translateY(-6px)',
               }}
             >
-              Use the telescope to stargaze
-            </span>
-          </div>
-        </Html>
+              <div
+                style={{
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '999px',
+                  background: '#dbeafe',
+                  boxShadow: '0 0 14px rgba(255,255,255,0.7)',
+                }}
+              />
+
+              <span
+                style={{
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.01em',
+                }}
+              >
+                Use the telescope to stargaze
+              </span>
+            </div>
+          </Html>
+        )}
         {telescopeMode && (
           <CameraControls
             ref={cameraControlsRef}
