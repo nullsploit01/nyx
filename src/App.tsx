@@ -1,13 +1,15 @@
 import KeyboardControlMapping from './components/KeyboardControlMapping';
+import Loader from './components/Loader';
 import Experience from './Experience';
 import { useLevaControls } from './hooks/useLevaControls';
-import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
+import { OrbitControls, useProgress } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Physics } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
 const App = () => {
+  const { active } = useProgress();
   const controls = useLevaControls('General', {
     color: 'black',
     debugPhysics: false,
@@ -32,7 +34,7 @@ const App = () => {
     >
       <Canvas
         camera={{
-          position: [0, 7, 30],
+          position: [0, 7, 3],
           fov: 90,
           near: 0.1,
           far: 800,
@@ -55,7 +57,8 @@ const App = () => {
         </EffectComposer>
         <Physics debug={controls.debugPhysics}>
           <KeyboardControlMapping>
-            <Experience />
+            {/* <Experience /> */}
+            {active ? <Loader /> : <Experience />}
           </KeyboardControlMapping>
         </Physics>
         {controls.enableOrbitControls && <OrbitControls makeDefault />}
@@ -63,15 +66,5 @@ const App = () => {
     </div>
   );
 };
-
-useGLTF.preload('./models/tree/pine_tree.glb');
-useGLTF.preload('./models/echo_house/echo_house.glb');
-useGLTF.preload('./models/ghost/ghost.glb');
-useGLTF.preload('./models/telescope/telescope.glb');
-useTexture.preload('/textures/grass/grass_displacement.png');
-useTexture.preload('/textures/grass/grass_normal.png');
-useTexture.preload('/textures/grass/grass_roughness.png');
-useTexture.preload('/textures/grass/grass_color.png');
-useTexture.preload('/textures/grass/grass_ao.png');
 
 export default App;

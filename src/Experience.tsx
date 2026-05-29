@@ -6,6 +6,7 @@ import Props from './components/Props';
 import StarField from './components/StarField';
 import { useGlobeStore } from './stores/experience';
 import type { Star } from './types';
+import { useGLTF, useTexture } from '@react-three/drei';
 import { useEffect, useState } from 'react';
 
 const Experience = () => {
@@ -48,5 +49,15 @@ const Experience = () => {
     </>
   );
 };
+
+useGLTF.preload('./models/tree/pine_tree.glb');
+useGLTF.preload('./models/echo_house/echo_house.glb');
+useGLTF.preload('./models/ghost/ghost.glb');
+useGLTF.preload('./models/telescope/telescope.glb');
+useTexture.preload('/textures/grass/grass_displacement.png');
+useTexture.preload('/textures/grass/grass_normal.png');
+useTexture.preload('/textures/grass/grass_roughness.png');
+useTexture.preload('/textures/grass/grass_color.png');
+useTexture.preload('/textures/grass/grass_ao.png');
 
 export default Experience;

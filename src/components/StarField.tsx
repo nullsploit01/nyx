@@ -6,6 +6,7 @@ import type { Star, VisibleStar } from '../types';
 import {
   altAzToXYZ,
   colorFromCI,
+  formatDistance,
   getSpectralGlow,
   getStarAtmosphereText,
   getStarDescription,
@@ -113,13 +114,14 @@ const StarField = ({ elevation, date, stars }: Props) => {
       color.lerp(new THREE.Color('white'), 0.65);
       colors.push(color.r, color.g, color.b);
       const brightness = Math.pow(10, -0.4 * mag);
+      const distanceLightYears = dist * 3.26156;
       const size = Math.max(0.08, Math.pow(brightness, 0.9) * 15);
       sizes.push(size);
       visibleStars.push({
         name: proper || `${con} ${spect}` || 'Catalog Star',
         constellation: con || 'Unknown',
         magnitude: mag,
-        distance: dist,
+        distance: distanceLightYears,
         spectral: spect || 'Unknown',
         worldPosition: new THREE.Vector3(x, y, z),
       });
@@ -272,7 +274,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
                       fontWeight: 600,
                     }}
                   >
-                    {hoveredStar.distance.toFixed(1)} light years
+                    {formatDistance(hoveredStar.distance)}
                   </div>
                 </div>
 

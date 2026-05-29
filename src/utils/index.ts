@@ -189,6 +189,18 @@ export const getStarAtmosphereText = (star: VisibleStar) => {
   return 'A distant stellar light drifting through the darkness of space.';
 };
 
+export const formatDistance = (ly: number) => {
+  if (ly < 100) {
+    return `${ly.toFixed(1)} light years`;
+  }
+
+  if (ly < 1000) {
+    return `${Math.round(ly)} light years`;
+  }
+
+  return `${(ly / 1000).toFixed(1)}k light years`;
+};
+
 export const getSpectralGlow = (spectral: string) => {
   if (spectral?.startsWith('O') || spectral?.startsWith('B')) {
     return `
