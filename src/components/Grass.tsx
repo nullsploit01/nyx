@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { DoubleSide, type InstancedMesh, Object3D, PlaneGeometry, ShaderMaterial } from 'three';
 
-const GRASS_COUNT = 450000;
+const GRASS_COUNT = 45000;
 
 const Grass = () => {
   const grassRef = useRef<InstancedMesh>(null);

@@ -1,7 +1,7 @@
 import KeyboardControlMapping from './components/KeyboardControlMapping';
 import Experience from './Experience';
 import { useLevaControls } from './hooks/useLevaControls';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Physics } from '@react-three/rapier';
@@ -63,5 +63,15 @@ const App = () => {
     </div>
   );
 };
+
+useGLTF.preload('./models/tree/pine_tree.glb');
+useGLTF.preload('./models/echo_house/echo_house.glb');
+useGLTF.preload('./models/ghost/ghost.glb');
+useGLTF.preload('./models/telescope/telescope.glb');
+useTexture.preload('/textures/grass/grass_displacement.png');
+useTexture.preload('/textures/grass/grass_normal.png');
+useTexture.preload('/textures/grass/grass_roughness.png');
+useTexture.preload('/textures/grass/grass_color.png');
+useTexture.preload('/textures/grass/grass_ao.png');
 
 export default App;
