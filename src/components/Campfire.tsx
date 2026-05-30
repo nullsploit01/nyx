@@ -9,7 +9,7 @@ const Campfire = () => {
 
   const controls = useLevaControls('Campfire', {
     position: {
-      value: [-28.5, 1.2, -37] as [number, number, number],
+      value: [-28.5, 1.2, -25] as [number, number, number],
       step: 0.5,
     },
     rotation: [0, 1.75, 0] as [number, number, number],

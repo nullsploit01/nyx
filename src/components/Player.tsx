@@ -1,5 +1,5 @@
 import { useLevaControls } from '../hooks/useLevaControls';
-import { useGlobeStore } from '../stores/experience';
+import { useGlobeStore } from '../stores/globeStore';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { CuboidCollider, RigidBody } from '@react-three/rapier';
 import Ecctrl from 'ecctrl';

@@ -1,7 +1,7 @@
 import { getLocationByLatAndLng } from '../services/api/location';
 import fragmentShader from '../shaders/globe/fragment.glsl';
 import vertexShader from '../shaders/globe/vertex.glsl';
-import { useGlobeStore } from '../stores/experience';
+import { useGlobeStore } from '../stores/globeStore';
 import type { NominatimReverseResponse } from '../types';
 import { getLocationTime } from '../utils';
 import LocationCard from './LocationCard';

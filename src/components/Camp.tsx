@@ -7,7 +7,7 @@ import { Mesh } from 'three';
 const Camp = () => {
   const controls = useLevaControls('Camp', {
     position: [-2, 1.2, 25] as [number, number, number],
-    rotation: [0, 1.75, 0] as [number, number, number],
+    rotation: [0, 1.5, 0] as [number, number, number],
     scale: 10,
   });
 

@@ -1,5 +1,5 @@
 import { useLevaControls } from '../hooks/useLevaControls';
-import { useGlobeStore } from '../stores/experience';
+import { useGlobeStore } from '../stores/globeStore';
 import { CameraControls, Html, useCursor, useGLTF } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { useEffect, useRef, useState } from 'react';

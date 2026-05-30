@@ -3,7 +3,7 @@ import fragmentShader from '../shaders/stars/fragment.glsl';
 import glowFragmentShader from '../shaders/stars/glow/fragment.glsl';
 import glowVertexShader from '../shaders/stars/glow/vertex.glsl';
 import vertexShader from '../shaders/stars/vertex.glsl';
-import { useGlobeStore } from '../stores/experience';
+import { useGlobeStore } from '../stores/globeStore';
 import type { Star, VisibleStar } from '../types';
 import { altAzToXYZ, colorFromCI } from '../utils';
 import StarInfoCard from './StarInfoCard';

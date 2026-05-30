@@ -1,7 +1,7 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import fragmentShader from '../shaders/moon/fragment.glsl';
 import vertexShader from '../shaders/moon/vertex.glsl';
-import { useGlobeStore } from '../stores/experience';
+import { useGlobeStore } from '../stores/globeStore';
 import { altAzToXYZ } from '../utils';
 import * as Astronomy from 'astronomy-engine';
 import * as THREE from 'three';
