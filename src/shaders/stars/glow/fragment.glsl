@@ -1,8 +1,13 @@
+uniform float time;
 uniform vec3 glowColor;
 
 void main() {
     vec2 uv = gl_PointCoord * 2.0 - 1.0;
     float d = length(uv);
+
+    if (d > 1.0) {
+        discard;
+    }
 
     float halo =
         pow(
@@ -21,12 +26,15 @@ void main() {
         1.0 +
         sin(time * 3.0) * 0.25;
 
-    vec3 color =
-        vec3(0.8, 0.9, 1.0);
-
     float alpha =
-        halo * 0.6 +
-        ring * pulse * 2.0;
+        halo * 0.15 +
+        ring * pulse * 0.4;
+
+    alpha = min(alpha, 1.0);
+
+    if (alpha < 0.01) {
+        discard;
+    }
 
     vec3 finalColor =
         mix(

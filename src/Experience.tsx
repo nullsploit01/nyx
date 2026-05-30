@@ -1,4 +1,4 @@
-// import Globe from './components/Globe';
+import Globe from './components/Globe';
 import Ground from './components/Ground';
 import Moon from './components/Moon';
 import Player from './components/Player';
@@ -32,12 +32,12 @@ const Experience = () => {
   return (
     <>
       {showGlobe ? (
-        // <Globe />
-        <>
-          <Ground />
-          <Props />
-        </>
+        <Globe />
       ) : (
+        // <>
+        //   <Ground />
+        //   <Props />
+        // </>
         <>
           <Moon {...testData} />
           <Ground />
@@ -50,7 +50,7 @@ const Experience = () => {
   );
 };
 
-useGLTF.preload('./models/tree/pine_tree.glb');
+useGLTF.preload('./models/pine_tree/pine_tree.glb');
 useGLTF.preload('./models/oak_tree/oak_tree.glb');
 useGLTF.preload('./models/echo_house/echo_house.glb');
 useGLTF.preload('./models/ghost/ghost.glb');

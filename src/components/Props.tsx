@@ -4,6 +4,7 @@ import Chair from './Chair';
 import Lantern from './Lantern';
 import OakTree from './OakTree';
 import Telescope from './Telescope';
+import Trees from './Trees';
 
 const Props = () => {
   return (
@@ -14,6 +15,7 @@ const Props = () => {
       <Campfire />
       <Lantern />
       <Telescope />
+      <Trees />
       <fog attach="fog" args={['#0b1020', 200, 900]} />
     </>
   );

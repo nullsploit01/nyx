@@ -210,6 +210,8 @@ const StarField = ({ elevation, date, stars }: Props) => {
             }}
             transparent
             depthWrite={false}
+            depthTest
+            alphaTest={0.01}
             blending={THREE.AdditiveBlending}
             vertexShader={glowVertexShader}
             fragmentShader={glowFragmentShader}
