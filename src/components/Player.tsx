@@ -1,7 +1,7 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import { useGlobeStore } from '../stores/experience';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { CuboidCollider } from '@react-three/rapier';
+import { CuboidCollider, RigidBody } from '@react-three/rapier';
 import Ecctrl from 'ecctrl';
 import { useEffect } from 'react';
 
@@ -14,7 +14,7 @@ const Player = () => {
   const controls = useLevaControls('Player', {
     position: [-1.3, 11.3, 36] as [number, number, number],
     rotation: [0, Math.PI, 0] as [number, number, number],
-    scale: 1,
+    scale: 10,
     disableControls: false,
     animation: {
       value: animations.names[0],
@@ -41,22 +41,20 @@ const Player = () => {
         camLerpMult={telescopeMode ? 0 : 1000}
         turnVelMultiplier={1}
         turnSpeed={10}
-        mode="CameraBasedMovement"
+        mode="PointToMove"
         maxVelLimit={40}
         disableFollowCam={controls.disableControls || telescopeMode}
         disableControl={controls.disableControls || telescopeMode}
         jumpVel={0}
+        camTargetPos={{ x: 0, y: 10, z: 0 }}
         camInitDir={{ x: 0, y: Math.PI }}
       >
-        <group
-          position={controls.position}
-          rotation={controls.rotation}
-          visible={false}
-          scale={controls.scale}
-        >
-          <primitive object={model.scene} />
-        </group>
-        <CuboidCollider args={[0.2, 0.5, 0.3]} />
+        <RigidBody position={controls.position} rotation={controls.rotation}>
+          <group visible={false} scale={controls.scale}>
+            <primitive object={model.scene} />
+          </group>
+          <CuboidCollider args={[0.2, 0.5, 0.3]} />
+        </RigidBody>
       </Ecctrl>
     </>
   );
