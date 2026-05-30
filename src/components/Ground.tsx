@@ -53,7 +53,7 @@ const Ground = () => {
           rotation={controls.rotation}
           receiveShadow
         >
-          <circleGeometry args={[190, 128]} />
+          <circleGeometry args={[125, 128]} />
           <meshStandardMaterial
             displacementScale={0.4}
             roughness={1}
@@ -63,7 +63,7 @@ const Ground = () => {
           />
         </mesh>
         <Grass />
-        <CuboidCollider args={[1000, 5, 1000]} />
+        <CuboidCollider args={[120, 1, 120]} />
       </RigidBody>
     </>
   );

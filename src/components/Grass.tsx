@@ -37,11 +37,11 @@ const Grass = () => {
     const dummy = new Object3D();
 
     for (let i = 0; i < GRASS_COUNT; i++) {
-      const radius = Math.sqrt(Math.random()) * 180;
+      const radius = Math.sqrt(Math.random()) * 120;
       const angle = Math.random() * Math.PI * 2;
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * radius;
-      dummy.position.set(x, 0.02, z);
+      dummy.position.set(x, 0.2, z);
       dummy.rotation.y = Math.random() * Math.PI;
       dummy.rotation.z = (Math.random() - 0.5) * 0.18;
       const scale = 1.2 + Math.random() * 1.5;
