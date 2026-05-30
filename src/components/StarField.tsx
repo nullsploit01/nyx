@@ -1,10 +1,13 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import fragmentShader from '../shaders/stars/fragment.glsl';
+import glowFragmentShader from '../shaders/stars/glow/fragment.glsl';
+import glowVertexShader from '../shaders/stars/glow/vertex.glsl';
 import vertexShader from '../shaders/stars/vertex.glsl';
 import { useGlobeStore } from '../stores/experience';
 import type { Star, VisibleStar } from '../types';
 import { altAzToXYZ, colorFromCI } from '../utils';
 import StarInfoCard from './StarInfoCard';
+import { useCursor } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as Astronomy from 'astronomy-engine';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -116,6 +119,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
         magnitude: mag,
         distance: dist * 3.26156,
         spectral: spect || 'Unknown',
+        colorIndex: ci,
         luminosity: lum,
         absoluteMagnitude: absmag,
         variable: variable,
@@ -131,6 +135,8 @@ const StarField = ({ elevation, date, stars }: Props) => {
     geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
     return geometry;
   }, [stars, elevation, date, coords]);
+
+  useCursor(telescopeMode && hoveredStar !== null, 'pointer', 'auto');
 
   return (
     <>
@@ -152,6 +158,33 @@ const StarField = ({ elevation, date, stars }: Props) => {
       </points>
 
       {hoveredStar && <StarInfoCard star={hoveredStar} />}
+      {hoveredStar && (
+        <points
+          position={[
+            hoveredStar.worldPosition.x,
+            hoveredStar.worldPosition.y,
+            hoveredStar.worldPosition.z,
+          ]}
+        >
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[new Float32Array([0, 0, 0]), 3]} />
+          </bufferGeometry>
+
+          <shaderMaterial
+            uniforms={{
+              time: { value: 0 },
+              glowColor: {
+                value: new THREE.Color(colorFromCI(hoveredStar.colorIndex)),
+              },
+            }}
+            transparent
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            vertexShader={glowVertexShader}
+            fragmentShader={glowFragmentShader}
+          />
+        </points>
+      )}
     </>
   );
 };

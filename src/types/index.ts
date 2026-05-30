@@ -54,6 +54,7 @@ export type VisibleStar = {
   constellation: string;
   magnitude: number;
   distance: number;
+  colorIndex: number;
   spectral: string;
   luminosity: number;
   absoluteMagnitude: number;
