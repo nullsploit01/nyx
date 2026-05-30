@@ -33,6 +33,7 @@ const App = () => {
       }}
     >
       <Canvas
+        shadows
         camera={{
           position: [0, 7, 3],
           fov: 90,

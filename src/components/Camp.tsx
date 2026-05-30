@@ -1,6 +1,8 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import { useGLTF } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { useEffect } from 'react';
+import { Mesh } from 'three';
 
 const Camp = () => {
   const controls = useLevaControls('Camp', {
@@ -10,6 +12,15 @@ const Camp = () => {
   });
 
   const model = useGLTF('./models/echo_house/echo_house.glb');
+
+  useEffect(() => {
+    model.scene.traverse((child) => {
+      if (child instanceof Mesh) {
+        child.castShadow = true;
+      }
+    });
+  }, []);
+
   return (
     <>
       <RigidBody colliders="trimesh" type="fixed">
