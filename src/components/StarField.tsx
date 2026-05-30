@@ -31,6 +31,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const mouse = useRef(new THREE.Vector2());
   const [hoveredStar, setHoveredStar] = useState<VisibleStar | null>(null);
+  const [selectedStar, setSelectedStar] = useState<VisibleStar | null>(null);
   const visibleStarsRef = useRef<VisibleStar[]>([]);
   useEffect(() => {
     perspectiveCamera.fov = telescopeMode ? controls.telescopeFov : 90;
@@ -50,6 +51,25 @@ const StarField = ({ elevation, date, stars }: Props) => {
     };
   }, []);
 
+  useEffect(() => {
+    const onPointerDown = () => {
+      if (!telescopeMode) {
+        return;
+      }
+
+      if (hoveredStar) {
+        setSelectedStar(hoveredStar);
+      } else {
+        setSelectedStar(null);
+      }
+    };
+
+    window.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [hoveredStar, telescopeMode]);
+
   useFrame(() => {
     if (materialRef.current) {
       materialRef.current.uniforms.telescopeZoom.value = THREE.MathUtils.lerp(
@@ -64,25 +84,36 @@ const StarField = ({ elevation, date, stars }: Props) => {
       return;
     }
 
+    setHoveredStar(getClosestStar(visibleStarsRef.current, mouse.current, camera));
+  });
+
+  const getClosestStar = (
+    stars: VisibleStar[],
+    mouse: THREE.Vector2,
+    camera: THREE.Camera,
+    maxDistance = 0.035,
+  ) => {
     let closestStar: VisibleStar | null = null;
     let closestDistance = Infinity;
 
-    visibleStarsRef.current.forEach((star) => {
+    stars.forEach((star) => {
       const screenPos = star.worldPosition.clone().project(camera);
-      const dx = screenPos.x - mouse.current.x;
-      const dy = screenPos.y - mouse.current.y;
+
+      const dx = screenPos.x - mouse.x;
+      const dy = screenPos.y - mouse.y;
+
       let dist = Math.sqrt(dx * dx + dy * dy);
 
-      // brighter stars easier to hover
       dist *= 1 + star.magnitude * 0.08;
-      if (dist < 0.035 && dist < closestDistance) {
+
+      if (dist < maxDistance && dist < closestDistance) {
         closestDistance = dist;
         closestStar = star;
       }
     });
 
-    setHoveredStar(closestStar);
-  });
+    return closestStar;
+  };
 
   const geometry = useMemo(() => {
     const positions: number[] = [];
@@ -137,7 +168,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
   }, [stars, elevation, date, coords]);
 
   useCursor(telescopeMode && hoveredStar !== null, 'pointer', 'auto');
-
+  const activeStar = selectedStar ?? hoveredStar;
   return (
     <>
       <points geometry={geometry}>
@@ -157,13 +188,13 @@ const StarField = ({ elevation, date, stars }: Props) => {
         />
       </points>
 
-      {hoveredStar && <StarInfoCard star={hoveredStar} />}
-      {hoveredStar && (
+      {activeStar && <StarInfoCard star={activeStar} />}
+      {activeStar && (
         <points
           position={[
-            hoveredStar.worldPosition.x,
-            hoveredStar.worldPosition.y,
-            hoveredStar.worldPosition.z,
+            activeStar.worldPosition.x,
+            activeStar.worldPosition.y,
+            activeStar.worldPosition.z,
           ]}
         >
           <bufferGeometry>
@@ -174,7 +205,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
             uniforms={{
               time: { value: 0 },
               glowColor: {
-                value: new THREE.Color(colorFromCI(hoveredStar.colorIndex)),
+                value: new THREE.Color(colorFromCI(activeStar.colorIndex)),
               },
             }}
             transparent
