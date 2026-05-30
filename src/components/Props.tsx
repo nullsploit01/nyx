@@ -2,19 +2,19 @@ import Camp from './Camp';
 import Campfire from './Campfire';
 import Chair from './Chair';
 import Lantern from './Lantern';
+import OakTree from './OakTree';
 import Telescope from './Telescope';
-import Tree from './Tree';
 
 const Props = () => {
   return (
     <>
-      <Tree />
+      <OakTree />
       <Camp />
       <Chair />
       <Campfire />
       <Lantern />
       <Telescope />
-      <fog attach="fog" args={['#000000', 200, 900]} />
+      <fog attach="fog" args={['#0b1020', 200, 900]} />
     </>
   );
 };

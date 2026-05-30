@@ -51,6 +51,7 @@ const Experience = () => {
 };
 
 useGLTF.preload('./models/tree/pine_tree.glb');
+useGLTF.preload('./models/oak_tree/oak_tree.glb');
 useGLTF.preload('./models/echo_house/echo_house.glb');
 useGLTF.preload('./models/ghost/ghost.glb');
 useGLTF.preload('./models/telescope/telescope.glb');
