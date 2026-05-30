@@ -19,7 +19,7 @@ const LocationCard = ({
     <Html
       center
       style={{
-        transform: 'translate3d(70%, 20px, 0)',
+        transform: 'translate3d(150px, -50%, 0)',
       }}
     >
       <div

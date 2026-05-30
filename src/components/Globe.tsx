@@ -30,7 +30,6 @@ const Globe = () => {
   const [introDone, setIntroDone] = useState(false);
   const [isCameraMoving, setIsCameraMoving] = useState(false);
   const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
-  // const [clickedViewSky, setClickedViewSky] = useState(false);
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/8081_earthlights4k.jpg',
     './textures/earth/8081_earthbump4k.jpg',
@@ -69,12 +68,10 @@ const Globe = () => {
       return;
     }
 
-    // pause rotation during camera movement
     if (!isCameraMoving && !location) {
       globeRef.current.rotation.y += delta * 0.02;
     }
 
-    // cinematic intro
     if (!introDone) {
       introProgress.current += delta * 0.22;
 
@@ -82,10 +79,8 @@ const Globe = () => {
       const eased = 1 - Math.pow(1 - t, 3);
       camera.position.set(12 - eased * 8, 4 - eased * 3, 18 - eased * 11);
 
-      // slight cinematic arc
       camera.position.x += Math.sin(t * Math.PI) * 2;
 
-      // orbit controls owns rotation
       controlsRef.current.target.set(0, 0, 0);
       controlsRef.current.update();
 
@@ -96,17 +91,12 @@ const Globe = () => {
       return;
     }
 
-    // smooth camera movement
     if (isCameraMoving) {
       camera.position.lerp(targetCameraPosition.current, delta * 1.8);
       controlsRef.current.update();
 
-      // finish movement
       if (camera.position.distanceTo(targetCameraPosition.current) < 0.1) {
         setIsCameraMoving(false);
-        // if (clickedViewSky) {
-        //   setShowGlobe(false);
-        // }
       }
     }
   });
@@ -119,14 +109,11 @@ const Globe = () => {
     const localPoint = globeRef.current.worldToLocal(e.point.clone());
     localPoint.normalize();
 
-    // marker above surface
     const markerPosition = localPoint.clone().multiplyScalar(4.05);
     setMarker(markerPosition);
 
-    // world direction
     const direction = e.point.clone().normalize();
 
-    // smoother camera angle
     const cameraPosition = direction
       .clone()
       .multiplyScalar(8)
@@ -135,7 +122,6 @@ const Globe = () => {
     targetCameraPosition.current.copy(cameraPosition);
     setIsCameraMoving(true);
 
-    // lat/lng
     const lat = Math.asin(localPoint.y) * (180 / Math.PI);
     let lng = Math.atan2(-localPoint.x, -localPoint.z) * (180 / Math.PI);
     lng += 90;
@@ -162,10 +148,9 @@ const Globe = () => {
 
     targetCameraPosition.current.copy(zoomPosition);
     setIsCameraMoving(true);
-    // setClickedViewSky(true);
     setTimeout(() => {
       setShowGlobe(false);
-    }, 3000);
+    }, 2000);
   };
 
   return (
