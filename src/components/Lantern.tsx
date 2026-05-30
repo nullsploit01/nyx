@@ -3,17 +3,17 @@ import { useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect } from 'react';
 import { Mesh } from 'three';
 
-const Campfire = () => {
-  const model = useGLTF('./models/camp_fire/camp_fire.glb');
+const Lantern = () => {
+  const model = useGLTF('./models/lantern/lantern.glb');
   const animations = useAnimations(model.animations, model.scene);
 
-  const controls = useLevaControls('Campfire', {
+  const controls = useLevaControls('Lantern', {
     position: {
-      value: [-28.5, 1.2, -37] as [number, number, number],
+      value: [55, -0.3, 32] as [number, number, number],
       step: 0.5,
     },
     rotation: [0, 1.75, 0] as [number, number, number],
-    scale: 10,
+    scale: 0.15,
     animation: {
       value: animations.names[0],
       options: animations.names,
@@ -41,10 +41,10 @@ const Campfire = () => {
     <>
       <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
         <primitive object={model.scene} />
-        <pointLight intensity={70} distance={8} decay={2} color="#ff9e57" position={[0, 0.2, 0]} />
+        <pointLight intensity={100} distance={10} decay={2} color="#ff9e57" position={[0, 97, 0]} />
       </group>
     </>
   );
 };
 
-export default Campfire;
+export default Lantern;

@@ -17,6 +17,7 @@ const Camp = () => {
     model.scene.traverse((child) => {
       if (child instanceof Mesh) {
         child.castShadow = true;
+        child.receiveShadow = true;
       }
     });
   }, []);

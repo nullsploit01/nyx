@@ -55,6 +55,7 @@ useGLTF.preload('./models/echo_house/echo_house.glb');
 useGLTF.preload('./models/ghost/ghost.glb');
 useGLTF.preload('./models/telescope/telescope.glb');
 useGLTF.preload('./models/camp_fire/camp_fire.glb');
+useGLTF.preload('./models/lantern/lantern.glb');
 useTexture.preload('/textures/grass/grass_displacement.png');
 useTexture.preload('/textures/grass/grass_normal.png');
 useTexture.preload('/textures/grass/grass_roughness.png');
