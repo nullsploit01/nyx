@@ -27,7 +27,7 @@ const Telescope = () => {
 
     const position = new Vector3(
       controls.position[0],
-      controls.position[1] + 4,
+      controls.position[1] + 40,
       controls.position[2],
     );
 
@@ -50,6 +50,8 @@ const Telescope = () => {
 
       true,
     );
+
+    cameraControlsRef.current.dollyTo(0.001, false);
   }, [telescopeMode]);
 
   const model = useGLTF('./models/telescope/telescope.glb');
@@ -115,8 +117,8 @@ const Telescope = () => {
             ref={cameraControlsRef}
             enabled={telescopeMode}
             smoothTime={1.2}
-            minDistance={1}
-            maxDistance={1}
+            minDistance={0.1}
+            maxDistance={0.1}
             truckSpeed={0}
             dollySpeed={0}
             polarRotateSpeed={0.08}
