@@ -1,10 +1,14 @@
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useLevaControls } from '../hooks/useLevaControls';
 import Grass from './Grass';
 import { useTexture } from '@react-three/drei';
 import { CuboidCollider, RigidBody } from '@react-three/rapier';
+import { useGame } from 'ecctrl';
+import { useRef } from 'react';
 import { DoubleSide, RepeatWrapping } from 'three';
 
 const Ground = () => {
+  const isMobile = useIsMobile();
   const controls = useLevaControls('Ground', {
     position: [0, 0, 0] as [number, number, number],
     rotation: [Math.PI * 0.5, 0, 0] as [number, number, number],
@@ -24,10 +28,31 @@ const Ground = () => {
     tex.repeat.set(10, 10);
   });
 
+  const date = useRef(0);
+  const setMoveToPoint = useGame((state) => state.setMoveToPoint);
   return (
     <>
-      <RigidBody type="fixed" colliders={false}>
-        <mesh position={controls.position} rotation={controls.rotation}>
+      <RigidBody type="fixed">
+        <mesh
+          onPointerDown={() => {
+            date.current = Date.now();
+          }}
+          onPointerUp={({ point }) => {
+            const wasClick = Date.now() - date.current < 200;
+            if (!wasClick || !isMobile) {
+              return;
+            }
+
+            setMoveToPoint({
+              x: point.x,
+              y: 0,
+              z: point.z,
+            } as never);
+          }}
+          position={controls.position}
+          rotation={controls.rotation}
+          receiveShadow
+        >
           <circleGeometry args={[190, 128]} />
           <meshStandardMaterial
             displacementScale={0.4}
