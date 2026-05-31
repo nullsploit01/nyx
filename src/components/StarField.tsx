@@ -29,48 +29,39 @@ const StarField = ({ elevation, date, stars }: Props) => {
   const { camera } = useThree();
   const perspectiveCamera = camera as THREE.PerspectiveCamera;
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const mouse = useRef(new THREE.Vector2());
+
   const [hoveredStar, setHoveredStar] = useState<VisibleStar | null>(null);
   const [selectedStar, setSelectedStar] = useState<VisibleStar | null>(null);
   const visibleStarsRef = useRef<VisibleStar[]>([]);
+
   useEffect(() => {
     perspectiveCamera.fov = telescopeMode ? controls.telescopeFov : 90;
     perspectiveCamera.updateProjectionMatrix();
-  }, [telescopeMode, controls.telescopeFov]);
+  }, [telescopeMode, controls.telescopeFov, perspectiveCamera]);
 
   useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    const handleTap = () => {
+      if (!telescopeMode) return;
+
+      setTimeout(() => {
+        setHoveredStar((currentHovered) => {
+          if (currentHovered) {
+            setSelectedStar(currentHovered);
+          } else {
+            setSelectedStar(null);
+          }
+          return currentHovered;
+        });
+      }, 0);
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-
+    window.addEventListener('pointerup', handleTap);
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('pointerup', handleTap);
     };
-  }, []);
+  }, [telescopeMode]);
 
-  useEffect(() => {
-    const onPointerDown = () => {
-      if (!telescopeMode) {
-        return;
-      }
-
-      if (hoveredStar) {
-        setSelectedStar(hoveredStar);
-      } else {
-        setSelectedStar(null);
-      }
-    };
-
-    window.addEventListener('pointerdown', onPointerDown);
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [hoveredStar, telescopeMode]);
-
-  useFrame(() => {
+  useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.telescopeZoom.value = THREE.MathUtils.lerp(
         materialRef.current.uniforms.telescopeZoom.value,
@@ -84,23 +75,24 @@ const StarField = ({ elevation, date, stars }: Props) => {
       return;
     }
 
-    setHoveredStar(getClosestStar(visibleStarsRef.current, mouse.current, camera));
+    const closest = getClosestStar(visibleStarsRef.current, state.pointer, camera);
+    setHoveredStar(closest);
   });
 
   const getClosestStar = (
-    stars: VisibleStar[],
-    mouse: THREE.Vector2,
-    camera: THREE.Camera,
-    maxDistance = 0.035,
+    starsList: VisibleStar[],
+    pointerPos: THREE.Vector2,
+    cam: THREE.Camera,
+    maxDistance = 0.045,
   ) => {
     let closestStar: VisibleStar | null = null;
     let closestDistance = Infinity;
 
-    stars.forEach((star) => {
-      const screenPos = star.worldPosition.clone().project(camera);
+    starsList.forEach((star) => {
+      const screenPos = star.worldPosition.clone().project(cam);
 
-      const dx = screenPos.x - mouse.x;
-      const dy = screenPos.y - mouse.y;
+      const dx = screenPos.x - pointerPos.x;
+      const dy = screenPos.y - pointerPos.y;
 
       let dist = Math.sqrt(dx * dx + dy * dy);
 
@@ -130,7 +122,6 @@ const StarField = ({ elevation, date, stars }: Props) => {
         star;
       const horizontal = Astronomy.Horizon(time, observer, ra * 15, dec, 'normal');
 
-      // hide stars below horizon
       if (horizontal.altitude < 0) {
         return;
       }
@@ -160,15 +151,17 @@ const StarField = ({ elevation, date, stars }: Props) => {
     });
 
     visibleStarsRef.current = visibleStars;
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
-    return geometry;
+
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    geom.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+    return geom;
   }, [stars, elevation, date, coords]);
 
   useCursor(telescopeMode && hoveredStar !== null, 'pointer', 'auto');
   const activeStar = selectedStar ?? hoveredStar;
+
   return (
     <>
       <points geometry={geometry}>

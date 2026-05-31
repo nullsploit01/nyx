@@ -27,8 +27,11 @@ const Telescope = () => {
       return;
     }
 
-    setHint(isMobile ? 'Two-finger tap to leave view' : 'Press ESC to leave view');
-  }, [telescopeMode, setHint]);
+    const exitHint = isMobile ? 'Two-finger tap to leave view' : 'Press ESC to leave view';
+    const actionHint = isMobile ? 'Tap a star to view more info' : 'Click a star to view more info';
+
+    setHint(`${actionHint} • ${exitHint}`);
+  }, [telescopeMode, isMobile, setHint]);
 
   useEffect(() => {
     if (!telescopeMode) {
