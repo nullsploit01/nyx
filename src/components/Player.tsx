@@ -6,7 +6,7 @@ import Ecctrl from 'ecctrl';
 import { useEffect } from 'react';
 
 const Player = () => {
-  const model = useGLTF('./models/ghost/ghost.glb');
+  const model = useGLTF('./models/ghost/ghost_compressed.glb');
 
   const animations = useAnimations(model.animations, model.scene);
   const telescopeMode = useGlobeStore((state) => state.telescopeMode);

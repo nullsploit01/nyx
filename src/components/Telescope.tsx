@@ -76,7 +76,7 @@ const Telescope = () => {
     cameraControlsRef.current.dollyTo(0.001, false);
   }, [telescopeMode]);
 
-  const model = useGLTF('./models/telescope/telescope.glb');
+  const model = useGLTF('./models/telescope/telescope_compressed.glb');
   useCursor(hovered, 'pointer');
   return (
     <>

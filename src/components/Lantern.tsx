@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Mesh } from 'three';
 
 const Lantern = () => {
-  const model = useGLTF('./models/lantern/lantern.glb');
+  const model = useGLTF('./models/lantern/lantern_compressed.glb');
   const animations = useAnimations(model.animations, model.scene);
 
   const controls = useLevaControls('Lantern', {

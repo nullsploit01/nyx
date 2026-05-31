@@ -15,3 +15,10 @@
 "Grass": https://jsfiddle.net/felixmariotto/hvrg721n/
 
 "Telescope" (https://skfb.ly/VouR) by Francesco Coldesina is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+To Compress Assets:
+```
+npm install --global @gltf-transform/cli
+
+gltf-transform optimize model.glb model_compressed.glb --compress meshopt --texture-compress webp
+```

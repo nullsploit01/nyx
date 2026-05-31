@@ -8,7 +8,7 @@ import { useMemo, useState } from 'react';
 
 const NoticeBoard = () => {
   const [showBoardMessage, setShowBoardMessage] = useState(false);
-  const model = useGLTF('./models/notice_board/notice_board.glb');
+  const model = useGLTF('./models/notice_board/notice_board_compressed.glb');
   const [isHovered, setIsHovered] = useState(false);
 
   useCursor(isHovered, 'pointer', 'auto');

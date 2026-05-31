@@ -11,7 +11,7 @@ const Camp = () => {
     scale: 10,
   });
 
-  const model = useGLTF('./models/echo_house/echo_house.glb');
+  const model = useGLTF('./models/echo_house/echo_house_compressed.glb');
 
   useEffect(() => {
     model.scene.traverse((child) => {

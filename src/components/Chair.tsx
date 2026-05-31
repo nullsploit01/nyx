@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Mesh } from 'three';
 
 const Chair = () => {
-  const model = useGLTF('./models/chair/chair.glb');
+  const model = useGLTF('./models/chair/chair_compressed.glb');
   const controls = useLevaControls('Chair', {
     position: {
       value: [13.5, 0, -43] as [number, number, number],

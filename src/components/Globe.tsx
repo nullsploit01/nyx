@@ -35,7 +35,7 @@ const Globe = () => {
     './textures/earth/8081_earthbump4k.webp',
   ]);
 
-  const locationPinModel = useGLTF('./models/pin_location/pin_location.glb');
+  const locationPinModel = useGLTF('./models/pin_location/pin_location_compressed.glb');
 
   useEffect(() => {
     if (!coords || (!coords.lat && !coords.lng)) {

@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { Mesh } from 'three';
 
 const Campfire = () => {
-  const model = useGLTF('./models/camp_fire/camp_fire.glb');
-  const logModel = useGLTF('./models/log/log.glb');
+  const model = useGLTF('./models/camp_fire/camp_fire_compressed.glb');
+  const logModel = useGLTF('./models/log/log_compressed.glb');
   const animations = useAnimations(model.animations, model.scene);
 
   const controls = useLevaControls('Campfire', {

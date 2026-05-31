@@ -11,7 +11,7 @@ const OakTree = () => {
     scale: 2.9,
   });
 
-  const model = useGLTF('./models/oak_tree/oak_tree.glb');
+  const model = useGLTF('./models/oak_tree/oak_tree_compressed.glb');
 
   useEffect(() => {
     model.scene.traverse((child) => {
