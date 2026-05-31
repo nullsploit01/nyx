@@ -42,7 +42,7 @@ const App = () => {
           position: [0, 7, 3],
           fov: 90,
           near: 0.1,
-          far: 800,
+          far: 80,
         }}
       >
         {isDebugMode && <Perf position="top-left" />}
