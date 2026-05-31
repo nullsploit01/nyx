@@ -57,10 +57,7 @@ const App = () => {
           <Bloom intensity={1.8} luminanceThreshold={0.02} luminanceSmoothing={0.95} mipmapBlur />
         </EffectComposer>
         <Physics debug={controls.debugPhysics}>
-          <KeyboardControlMapping>
-            {/* <Experience /> */}
-            {active ? <Loader /> : <Experience />}
-          </KeyboardControlMapping>
+          <KeyboardControlMapping>{active ? <Loader /> : <Experience />}</KeyboardControlMapping>
         </Physics>
         {controls.enableOrbitControls && <OrbitControls makeDefault />}
       </Canvas>
