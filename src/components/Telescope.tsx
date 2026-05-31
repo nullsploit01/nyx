@@ -1,14 +1,34 @@
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useLevaControls } from '../hooks/useLevaControls';
 import { useTwoFingerTap } from '../hooks/useTwoFingerTap';
 import { useGlobeStore } from '../stores/globeStore';
-import { CameraControls, Html, useCursor, useGLTF } from '@react-three/drei';
+import HelperMessage from './HelperMessage';
+import {
+  CameraControls,
+  Html,
+  Hud,
+  PerspectiveCamera,
+  useCursor,
+  useGLTF,
+} from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
 import { Euler, Vector3 } from 'three';
 
 const Telescope = () => {
+  const isMobile = useIsMobile();
+  const [hint, setHint] = useState<string | null>(null);
+
   const [hovered, setHovered] = useState(false);
   const setTelescopeMode = useGlobeStore((state) => state.setTelescopeMode);
   const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
+  useEffect(() => {
+    if (!telescopeMode) {
+      return;
+    }
+
+    setHint(isMobile ? 'Two-finger tap to leave view' : 'Press ESC to leave view');
+  }, [telescopeMode, setHint]);
 
   useEffect(() => {
     if (!telescopeMode) {
@@ -149,6 +169,14 @@ const Telescope = () => {
           />
         )}
       </group>
+
+      {hint && telescopeMode && (
+        <Hud>
+          <ambientLight intensity={1.5} />
+          <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+          <HelperMessage message={hint} duration={1250000} onComplete={() => setHint(null)} />
+        </Hud>
+      )}
     </>
   );
 };

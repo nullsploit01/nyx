@@ -10,10 +10,14 @@ type HelperMessageProps = {
 const HelperMessage = ({ message, duration = 4000, onComplete }: HelperMessageProps) => {
   const [visible, setVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
+  const [isEntering, setIsEntering] = useState(true);
 
   useEffect(() => {
     setVisible(true);
     setIsFading(false);
+    setIsEntering(true);
+
+    const introTimeout = setTimeout(() => setIsEntering(false), 30);
 
     const fadeTimeout = setTimeout(() => {
       setIsFading(true);
@@ -25,12 +29,17 @@ const HelperMessage = ({ message, duration = 4000, onComplete }: HelperMessagePr
     }, duration);
 
     return () => {
+      clearTimeout(introTimeout);
       clearTimeout(fadeTimeout);
       clearTimeout(removeTimeout);
     };
   }, [message, duration, onComplete]);
 
   if (!visible) return null;
+
+  let currentTransform = 'translateY(0) scale(1)';
+  if (isEntering) currentTransform = 'translateY(-10px) scale(0.95)';
+  if (isFading) currentTransform = 'translateY(-8px) scale(0.97)';
 
   return (
     <Html
@@ -44,28 +53,33 @@ const HelperMessage = ({ message, duration = 4000, onComplete }: HelperMessagePr
     >
       <div
         style={{
-          marginTop: '48px',
+          marginTop: '46px',
           padding: '12px 24px',
-          background: 'rgba(15, 18, 24, 0.9)',
-          backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(224, 214, 196, 0.15)',
-          borderRadius: '30px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-          color: '#e2e8f0',
+          background:
+            'radial-gradient(circle at center, rgba(13, 16, 26, 0.92) 0%, rgba(5, 6, 10, 0.98) 100%)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '24px',
+          boxShadow: `
+            0 0 25px rgba(255, 255, 255, 0.03),
+            inset 0 0 10px rgba(255, 255, 255, 0.02),
+            0 12px 36px rgba(0, 0, 0, 0.8)
+          `,
+          color: '#f8fafc',
           fontFamily: '"Georgia", serif',
-          fontSize: '13px',
-          letterSpacing: '0.05em',
+          fontSize: '13.5px',
+          letterSpacing: '0.04em',
           textAlign: 'center',
           whiteSpace: 'nowrap',
           userSelect: 'none',
-
-          // CSS Hardware Accelerated Smooth Fade Transitions
-          transition: 'opacity 400ms ease-in-out, transform 400ms ease-in-out',
-          opacity: isFading ? 0 : 1,
-          transform: isFading ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
+          textShadow: '0 0 8px rgba(255, 255, 255, 0.25)',
+          transition:
+            'opacity 400ms cubic-bezier(0.3, 1, 0.4, 1), transform 400ms cubic-bezier(0.3, 1, 0.4, 1)',
+          opacity: isEntering || isFading ? 0 : 1,
+          transform: currentTransform,
         }}
       >
-        ✦ {message} ✦
+        {message}
       </div>
     </Html>
   );
