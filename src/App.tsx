@@ -1,15 +1,19 @@
 import KeyboardControlMapping from './components/KeyboardControlMapping';
 import Loader from './components/Loader';
 import Experience from './Experience';
+import { useDebugMode } from './hooks/useDebugMode';
 import { useLevaControls } from './hooks/useLevaControls';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Physics } from '@react-three/rapier';
+import { Leva } from 'leva';
 import { Perf } from 'r3f-perf';
 import { Suspense } from 'react';
 
 const App = () => {
+  const isDebugMode = useDebugMode();
+
   const controls = useLevaControls('General', {
     color: 'black',
     debugPhysics: false,
@@ -41,7 +45,7 @@ const App = () => {
           far: 800,
         }}
       >
-        <Perf position="top-left" />
+        {isDebugMode && <Perf position="top-left" />}
         {controls.ambientLight && (
           <ambientLight shadow-normalBias={0.02} intensity={controls.ambientLightIntensity} />
         )}
@@ -65,6 +69,7 @@ const App = () => {
         </Physics>
         {controls.enableOrbitControls && <OrbitControls makeDefault />}
       </Canvas>
+      <Leva flat hidden={!isDebugMode} />
     </div>
   );
 };
