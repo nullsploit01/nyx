@@ -60,11 +60,15 @@ useGLTF.preload('./models/camp_fire/camp_fire.glb');
 useGLTF.preload('./models/lantern/lantern.glb');
 useGLTF.preload('./models/chair/chair.glb');
 useGLTF.preload('./models/notice_board/notice_board.glb');
+useGLTF.preload('./models/log/log.glb');
 useTexture.preload('/textures/grass/grass_displacement.webp');
 useTexture.preload('/textures/grass/grass_normal.webp');
 useTexture.preload('/textures/grass/grass_roughness.webp');
 useTexture.preload('/textures/grass/grass_color.webp');
 useTexture.preload('/textures/grass/grass_ao.webp');
+useTexture.preload('/textures/grass/rocks_arm.webp');
+useTexture.preload('/textures/grass/rocks_diff.webp');
+useTexture.preload('/textures/grass/rocks_normal.webp');
 useTexture.preload('./textures/earth/8081_earthlights4k.webp');
 useTexture.preload('./textures/earth/8081_earthbump4k.webp');
 

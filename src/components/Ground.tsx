@@ -24,11 +24,11 @@ const Ground = () => {
   });
 
   const rocksTexture = useTexture({
-    map: 'textures/rocks/rocks_diff.png',
-    normalMap: 'textures/rocks/rocks_normal.png',
-    aoMap: 'textures/rocks/rocks_arm.png',
-    roughnessMap: 'textures/rocks/rocks_arm.png',
-    metalnessMap: 'textures/rocks/rocks_arm.png',
+    map: 'textures/rocks/rocks_diff.webp',
+    normalMap: 'textures/rocks/rocks_normal.webp',
+    aoMap: 'textures/rocks/rocks_arm.webp',
+    roughnessMap: 'textures/rocks/rocks_arm.webp',
+    metalnessMap: 'textures/rocks/rocks_arm.webp',
   });
 
   useMemo(() => {
