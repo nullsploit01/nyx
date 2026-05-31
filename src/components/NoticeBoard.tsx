@@ -1,13 +1,17 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import { useGlobeStore } from '../stores/globeStore';
 import { getLocationTime } from '../utils';
-import NoticeBoardInformation from './LocationDetails';
-import { useGLTF } from '@react-three/drei';
+import NoticeBoardInformation from './NoticeBoardInformation';
+import { useCursor, useGLTF } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 const NoticeBoard = () => {
+  const [showBoardMessage, setShowBoardMessage] = useState(false);
   const model = useGLTF('./models/notice_board/notice_board.glb');
+  const [isHovered, setIsHovered] = useState(false);
+
+  useCursor(isHovered, 'pointer', 'auto');
 
   const controls = useLevaControls('NoticeBoard', {
     position: {
@@ -20,7 +24,6 @@ const NoticeBoard = () => {
 
   const location = useGlobeStore((state) => state.location);
   const coords = useGlobeStore((state) => state.coords);
-
   const locationTime = useMemo(() => {
     if (!coords) {
       return null;
@@ -32,8 +35,20 @@ const NoticeBoard = () => {
   return (
     <>
       <RigidBody position={controls.position} rotation={controls.rotation} type="fixed">
-        <group>
-          {location && <NoticeBoardInformation location={location} locationTime={locationTime} />}
+        <group
+          onPointerOver={() => setIsHovered(true)}
+          onPointerOut={() => setIsHovered(false)}
+          onClick={() => {
+            setShowBoardMessage(!showBoardMessage);
+          }}
+        >
+          {showBoardMessage && location && (
+            <NoticeBoardInformation
+              onClick={() => setShowBoardMessage(false)}
+              location={location}
+              locationTime={locationTime}
+            />
+          )}
 
           <primitive object={model.scene} scale={controls.scale} />
         </group>
