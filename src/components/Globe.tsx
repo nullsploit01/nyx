@@ -4,6 +4,7 @@ import vertexShader from '../shaders/globe/vertex.glsl';
 import { useGlobeStore } from '../stores/globeStore';
 import type { NominatimReverseResponse } from '../types';
 import { getLocationTime } from '../utils';
+import HelperMessage from './HelperMessage';
 import LocationCard from './LocationCard';
 import { OrbitControls, Sparkles, useGLTF, useTexture } from '@react-three/drei';
 import { type ThreeEvent, useFrame, useThree } from '@react-three/fiber';
@@ -30,6 +31,8 @@ const Globe = () => {
   const [introDone, setIntroDone] = useState(false);
   const [isCameraMoving, setIsCameraMoving] = useState(false);
   const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
+  const [hint, setHint] = useState<string | null>('Tap the globe to select a camp location');
+
   const [colorMap, bumpMap] = useTexture([
     './textures/earth/8081_earthlights4k.webp',
     './textures/earth/8081_earthbump4k.webp',
@@ -132,6 +135,7 @@ const Globe = () => {
     markerRef.current?.rotateX(-1.2);
     setCoords({ lat, lng });
     setLoadingMarkedLocation(true);
+    setHint(null);
   };
 
   const onViewSkyBtnClick = () => {
@@ -212,6 +216,7 @@ const Globe = () => {
         minDistance={5}
         maxDistance={20}
       />
+      {hint && <HelperMessage message={hint} duration={12500} onComplete={() => setHint(null)} />}
     </>
   );
 };
