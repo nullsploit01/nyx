@@ -19,7 +19,7 @@ const Grass = ({ ignoreZones = [] }: GrassProps) => {
   const grassRef = useRef<InstancedMesh>(null);
 
   const grassGeometry = useMemo(() => {
-    const geo = new PlaneGeometry(0.18, 1.8, 1, 1);
+    const geo = new PlaneGeometry(0.18, 0.8, 1, 1);
     geo.translate(0, 0.5, 0);
     return geo;
   }, []);

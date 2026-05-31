@@ -1,10 +1,11 @@
 import { useLevaControls } from '../hooks/useLevaControls';
-import { useAnimations, useGLTF } from '@react-three/drei';
+import { Clone, useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect } from 'react';
 import { Mesh } from 'three';
 
 const Campfire = () => {
   const model = useGLTF('./models/camp_fire/camp_fire.glb');
+  const logModel = useGLTF('./models/log/log.glb');
   const animations = useAnimations(model.animations, model.scene);
 
   const controls = useLevaControls('Campfire', {
@@ -41,6 +42,18 @@ const Campfire = () => {
     <>
       <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
         <primitive object={model.scene} />
+        <Clone
+          scale={1.5}
+          rotation={[0, -0.4, Math.PI]}
+          object={logModel.scene}
+          position={[2.2, 0.2, 1.4]}
+        />
+        <Clone
+          scale={1.5}
+          object={logModel.scene}
+          position={[0.7, 0.2, -1.4]}
+          rotation={[0, 1.2, Math.PI]}
+        />
         <pointLight intensity={70} distance={8} decay={2} color="#ff9e57" position={[0, 0.2, 0]} />
       </group>
     </>

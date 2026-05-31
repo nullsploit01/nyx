@@ -107,9 +107,15 @@ const Ground = () => {
         {!controls.disableGrass && (
           <Grass
             ignoreZones={[
+              //Pathway
               {
                 position: [70, 1, 10],
                 args: [95, 1, 25],
+              },
+              //Camp
+              {
+                position: [-28.5, 1.2, -25],
+                args: [45, 1, 45],
               },
             ]}
           />
