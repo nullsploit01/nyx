@@ -167,8 +167,9 @@ const NoticeBoardInformation = ({
             color: '#94a3b8',
           }}
         >
-          <span style={{ fontStyle: 'italic', fontSize: '9px', opacity: 0.7 }}>
-            * Accuracy may vary
+          <span style={{ fontStyle: 'italic', fontSize: '9px', opacity: 0.8, color: '#c5b69c' }}>
+            * Simulated mathematically. Real-world cosmic anomalies and localized visibility
+            parameters may vary.
           </span>
           <button
             onClick={() => {}}
@@ -180,6 +181,8 @@ const NoticeBoardInformation = ({
               textDecoration: 'underline',
               cursor: 'pointer',
               padding: 0,
+              marginLeft: '12px',
+              whiteSpace: 'nowrap',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#f5f5f7')}
             onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
