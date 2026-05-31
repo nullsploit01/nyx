@@ -1,4 +1,4 @@
-import Globe from './components/Globe';
+// import Globe from './components/Globe';
 import Ground from './components/Ground';
 import Moon from './components/Moon';
 import Player from './components/Player';
@@ -32,12 +32,12 @@ const Experience = () => {
   return (
     <>
       {showGlobe ? (
-        <Globe />
+        // <Globe />
+        <>
+          <Ground />
+          <Props />
+        </>
       ) : (
-        // <>
-        //   <Ground />
-        //   <Props />
-        // </>
         <>
           <Moon {...testData} />
           <Ground />
@@ -59,6 +59,7 @@ useGLTF.preload('./models/telescope/telescope.glb');
 useGLTF.preload('./models/camp_fire/camp_fire.glb');
 useGLTF.preload('./models/lantern/lantern.glb');
 useGLTF.preload('./models/chair/chair.glb');
+useGLTF.preload('./models/notice_board/notice_board.glb');
 useTexture.preload('/textures/grass/grass_displacement.webp');
 useTexture.preload('/textures/grass/grass_normal.webp');
 useTexture.preload('/textures/grass/grass_roughness.webp');
