@@ -90,7 +90,6 @@ const Ground = () => {
             side={DoubleSide}
           />
         </mesh>
-        {!controls.disableGrass && <Grass />}
         <CuboidCollider args={[120, 1, 120]} />
 
         <mesh position={[70, 0.01, 10]}>
@@ -104,6 +103,17 @@ const Ground = () => {
             side={DoubleSide}
           />
         </mesh>
+
+        {!controls.disableGrass && (
+          <Grass
+            ignoreZones={[
+              {
+                position: [70, 1, 10],
+                args: [95, 1, 25],
+              },
+            ]}
+          />
+        )}
       </RigidBody>
     </>
   );
