@@ -36,7 +36,7 @@ const NoticeBoardInformation = ({
     location?.lon && !isNaN(Number(location.lon)) ? `${Number(location.lon).toFixed(2)}°W` : '--';
 
   return (
-    <Html position={[-10, 50, 0]} center style={{ pointerEvents: 'auto' }}>
+    <Html position={[-10, 20, 0]} center style={{ pointerEvents: 'auto' }}>
       <div
         style={{
           position: 'fixed',

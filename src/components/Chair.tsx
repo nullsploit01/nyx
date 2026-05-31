@@ -7,7 +7,7 @@ const Chair = () => {
   const model = useGLTF('./models/chair/chair.glb');
   const controls = useLevaControls('Chair', {
     position: {
-      value: [40, 0, -15] as [number, number, number],
+      value: [13.5, 0, -43] as [number, number, number],
       step: 0.5,
     },
     rotation: [0, 1.5, 0] as [number, number, number],

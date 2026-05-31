@@ -15,10 +15,10 @@ const NoticeBoard = () => {
 
   const controls = useLevaControls('NoticeBoard', {
     position: {
-      value: [-46, -0.3, -43] as [number, number, number],
+      value: [62, -0.3, -7.5] as [number, number, number],
       step: 0.5,
     },
-    rotation: [0, 0.94, 0] as [number, number, number],
+    rotation: [0, -0.04, 0] as [number, number, number],
     scale: 7.15,
   });
 
@@ -39,6 +39,7 @@ const NoticeBoard = () => {
           onPointerOver={() => setIsHovered(true)}
           onPointerOut={() => setIsHovered(false)}
           onClick={() => {
+            console.log('click');
             setShowBoardMessage(!showBoardMessage);
           }}
         >

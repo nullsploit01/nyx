@@ -12,7 +12,7 @@ const Telescope = () => {
 
   const controls = useLevaControls('Telescope', {
     position: {
-      value: [50, 12, -8] as [number, number, number],
+      value: [31, 12, -36] as [number, number, number],
       step: 0.5,
     },
     rotation: [0, -0.35, 0] as [number, number, number],
