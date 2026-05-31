@@ -1,3 +1,4 @@
+import { useIsMobile } from '../hooks/useIsMobile';
 import type { NominatimReverseResponse } from '../types';
 import type { LocationTimeData } from '../utils';
 import { Html } from '@react-three/drei';
@@ -13,20 +14,21 @@ const LocationCard = ({
   locationTime: LocationTimeData | null;
   onClick: () => void;
 }) => {
+  const isMobile = useIsMobile();
   const hasError = 'error' in location;
 
   return (
     <Html
       center
       style={{
-        transform: 'translate3d(150px, -50%, 0)',
+        transform: isMobile ? 'translate3d(-120px, 50px, 0)' : 'translate3d(150px, -50%, 0)',
       }}
     >
       <div
         style={{
           position: 'relative',
-          width: '280px',
-          padding: '20px',
+          width: isMobile ? '220px' : '280px',
+          padding: isMobile ? '16px' : '20px',
           borderRadius: '26px',
           overflow: 'hidden',
           background: 'linear-gradient(180deg, rgba(5,10,25,0.95), rgba(7,12,24,0.82))',
@@ -153,128 +155,133 @@ const LocationCard = ({
                 {location.address.country}
               </div>
             </div>
-            {locationTime && (
-              <div
-                style={{
-                  marginTop: '18px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  color: 'rgba(180,200,255,0.72)',
-                  fontSize: '0.82rem',
-                  borderTop: '1px solid rgba(255,255,255,0.05)',
-                  paddingTop: '14px',
-                }}
-              >
-                <div>
-                  <span
-                    style={{
-                      color: 'rgba(150,170,220,0.48)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.12em',
-                      fontSize: '0.68rem',
-                    }}
-                  >
-                    Local Time
-                  </span>
-
+            {!isMobile && (
+              <>
+                {locationTime && (
                   <div
                     style={{
-                      marginTop: '6px',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      fontFamily: 'JetBrains Mono, monospace',
-                      color: 'white',
-                    }}
-                  >
-                    {locationTime.localTime}
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    textAlign: 'right',
-                  }}
-                >
-                  <div
-                    style={{
-                      color: 'rgba(150,170,220,0.48)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.12em',
-                      fontSize: '0.68rem',
-                    }}
-                  >
-                    Timezone
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: '6px',
+                      marginTop: '18px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      color: 'rgba(180,200,255,0.72)',
                       fontSize: '0.82rem',
-                      color: 'rgba(200,220,255,0.72)',
+                      borderTop: '1px solid rgba(255,255,255,0.05)',
+                      paddingTop: '14px',
                     }}
                   >
-                    {locationTime.timezone}
+                    <div>
+                      <span
+                        style={{
+                          color: 'rgba(150,170,220,0.48)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.12em',
+                          fontSize: '0.68rem',
+                        }}
+                      >
+                        Local Time
+                      </span>
+
+                      <div
+                        style={{
+                          marginTop: '6px',
+                          fontSize: '1rem',
+                          fontWeight: 600,
+                          fontFamily: 'JetBrains Mono, monospace',
+                          color: 'white',
+                        }}
+                      >
+                        {locationTime.localTime}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        textAlign: 'right',
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: 'rgba(150,170,220,0.48)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.12em',
+                          fontSize: '0.68rem',
+                        }}
+                      >
+                        Timezone
+                      </div>
+
+                      <div
+                        style={{
+                          marginTop: '6px',
+                          fontSize: '0.82rem',
+                          color: 'rgba(200,220,255,0.72)',
+                        }}
+                      >
+                        {locationTime.timezone}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div
+                  style={{
+                    marginTop: '22px',
+                    paddingTop: '16px',
+                    borderTop: '1px solid rgba(255,255,255,0.06)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        fontSize: '0.7rem',
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(150,170,220,0.55)',
+                      }}
+                    >
+                      Latitude
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: '6px',
+                        fontSize: '1rem',
+                        fontFamily: 'JetBrains Mono, monospace',
+                      }}
+                    >
+                      {Math.abs(Number(location.lat)).toFixed(2)}°{' '}
+                      {Number(location.lat) >= 0 ? 'N' : 'S'}
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: '0.7rem',
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(150,170,220,0.55)',
+                      }}
+                    >
+                      Longitude
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: '6px',
+                        fontSize: '1rem',
+                        fontFamily: 'JetBrains Mono, monospace',
+                      }}
+                    >
+                      {Math.abs(Number(location.lon)).toFixed(2)}°{' '}
+                      {Number(location.lon) >= 0 ? 'E' : 'W'}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
-            <div
-              style={{
-                marginTop: '22px',
-                paddingTop: '16px',
-                borderTop: '1px solid rgba(255,255,255,0.06)',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: '0.7rem',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(150,170,220,0.55)',
-                  }}
-                >
-                  Latitude
-                </div>
 
-                <div
-                  style={{
-                    marginTop: '6px',
-                    fontSize: '1rem',
-                    fontFamily: 'JetBrains Mono, monospace',
-                  }}
-                >
-                  {Math.abs(Number(location.lat)).toFixed(2)}°{' '}
-                  {Number(location.lat) >= 0 ? 'N' : 'S'}
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: '0.7rem',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(150,170,220,0.55)',
-                  }}
-                >
-                  Longitude
-                </div>
-
-                <div
-                  style={{
-                    marginTop: '6px',
-                    fontSize: '1rem',
-                    fontFamily: 'JetBrains Mono, monospace',
-                  }}
-                >
-                  {Math.abs(Number(location.lon)).toFixed(2)}°{' '}
-                  {Number(location.lon) >= 0 ? 'E' : 'W'}
-                </div>
-              </div>
-            </div>
             <ViewNightSkyButton onClick={onClick} />
           </>
         )}

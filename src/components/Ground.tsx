@@ -90,37 +90,36 @@ const Ground = () => {
             side={DoubleSide}
           />
         </mesh>
-        <CuboidCollider args={[120, 1, 120]} />
-
-        <mesh position={[70, 0.01, 10]}>
-          <boxGeometry args={[95, 1, 25]} />
-          <meshStandardMaterial
-            displacementScale={0.05}
-            normalScale={new Vector2(1.5, 1.5)}
-            roughness={0.9}
-            metalness={0.0}
-            {...rocksTexture}
-            side={DoubleSide}
-          />
-        </mesh>
-
-        {!controls.disableGrass && (
-          <Grass
-            ignoreZones={[
-              //Pathway
-              {
-                position: [70, 1, 10],
-                args: [95, 1, 25],
-              },
-              //Camp
-              {
-                position: [-28.5, 1.2, -25],
-                args: [45, 1, 45],
-              },
-            ]}
-          />
-        )}
+        <CuboidCollider args={[120, 0.1, 120]} />
       </RigidBody>
+      <mesh position={[70, 0.01, 10]}>
+        <boxGeometry args={[95, 1, 25]} />
+        <meshStandardMaterial
+          displacementScale={0.05}
+          normalScale={new Vector2(1.5, 1.5)}
+          roughness={0.9}
+          metalness={0.0}
+          {...rocksTexture}
+          side={DoubleSide}
+        />
+      </mesh>
+
+      {!controls.disableGrass && !isMobile && (
+        <Grass
+          ignoreZones={[
+            //Pathway
+            {
+              position: [70, 1, 10],
+              args: [95, 1, 25],
+            },
+            //Camp
+            {
+              position: [-28.5, 1.2, -25],
+              args: [45, 1, 45],
+            },
+          ]}
+        />
+      )}
     </>
   );
 };

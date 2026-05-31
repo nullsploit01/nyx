@@ -3,7 +3,6 @@ import { useGlobeStore } from '../stores/globeStore';
 import { getLocationTime } from '../utils';
 import NoticeBoardInformation from './NoticeBoardInformation';
 import { useCursor, useGLTF } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
 import { useMemo, useState } from 'react';
 
 const NoticeBoard = () => {
@@ -34,26 +33,25 @@ const NoticeBoard = () => {
 
   return (
     <>
-      <RigidBody position={controls.position} rotation={controls.rotation} type="fixed">
-        <group
-          onPointerOver={() => setIsHovered(true)}
-          onPointerOut={() => setIsHovered(false)}
-          onClick={() => {
-            console.log('click');
-            setShowBoardMessage(!showBoardMessage);
-          }}
-        >
-          {showBoardMessage && location && (
-            <NoticeBoardInformation
-              onClick={() => setShowBoardMessage(false)}
-              location={location}
-              locationTime={locationTime}
-            />
-          )}
+      <group
+        position={controls.position}
+        rotation={controls.rotation}
+        onPointerOver={() => setIsHovered(true)}
+        onPointerOut={() => setIsHovered(false)}
+        onClick={() => {
+          setShowBoardMessage(!showBoardMessage);
+        }}
+      >
+        {showBoardMessage && location && (
+          <NoticeBoardInformation
+            onClick={() => setShowBoardMessage(false)}
+            location={location}
+            locationTime={locationTime}
+          />
+        )}
 
-          <primitive object={model.scene} scale={controls.scale} />
-        </group>
-      </RigidBody>
+        <primitive object={model.scene} scale={controls.scale} />
+      </group>
     </>
   );
 };

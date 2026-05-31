@@ -6,7 +6,7 @@ import Ecctrl from 'ecctrl';
 import { useEffect } from 'react';
 
 const Player = () => {
-  const model = useGLTF('./models/ghost/ghost_compressed.glb');
+  const model = useGLTF('./models/ghost/ghost.glb');
 
   const animations = useAnimations(model.animations, model.scene);
   const telescopeMode = useGlobeStore((state) => state.telescopeMode);
@@ -53,7 +53,7 @@ const Player = () => {
           <group visible={false} scale={controls.scale}>
             <primitive object={model.scene} />
           </group>
-          <CuboidCollider args={[0.2, 0.5, 0.3]} />
+          <CuboidCollider args={[0.2, 0.1, 0.3]} />
         </RigidBody>
       </Ecctrl>
     </>

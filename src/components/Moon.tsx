@@ -25,7 +25,6 @@ const Moon = (props: MoonProps) => {
   const time = new Astronomy.AstroTime(props.date);
   const moonEqu = Astronomy.Equator(Astronomy.Body.Moon, time, observer, true, true);
   const moonHor = Astronomy.Horizon(time, observer, moonEqu.ra * 15, moonEqu.dec, 'normal');
-  console.log(moonHor);
   const phase = Astronomy.MoonPhase(time);
   const [x, y, z] = altAzToXYZ(moonHor.altitude, moonHor.azimuth, 490);
 

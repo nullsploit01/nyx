@@ -1,6 +1,5 @@
 import { useLevaControls } from '../hooks/useLevaControls';
 import { useGLTF } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
 import { useEffect } from 'react';
 import { Mesh } from 'three';
 
@@ -23,11 +22,9 @@ const OakTree = () => {
 
   return (
     <>
-      <RigidBody type="fixed">
-        <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
-          <primitive object={model.scene} />
-        </group>
-      </RigidBody>
+      <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
+        <primitive object={model.scene} />
+      </group>
     </>
   );
 };
