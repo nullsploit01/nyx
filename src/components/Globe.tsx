@@ -31,8 +31,8 @@ const Globe = () => {
   const [isCameraMoving, setIsCameraMoving] = useState(false);
   const [loadingMarkedLocation, setLoadingMarkedLocation] = useState(false);
   const [colorMap, bumpMap] = useTexture([
-    './textures/earth/8081_earthlights4k.jpg',
-    './textures/earth/8081_earthbump4k.jpg',
+    './textures/earth/8081_earthlights4k.webp',
+    './textures/earth/8081_earthbump4k.webp',
   ]);
 
   const locationPinModel = useGLTF('./models/pin_location/pin_location.glb');

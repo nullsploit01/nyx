@@ -2,14 +2,14 @@ import KeyboardControlMapping from './components/KeyboardControlMapping';
 import Loader from './components/Loader';
 import Experience from './Experience';
 import { useLevaControls } from './hooks/useLevaControls';
-import { OrbitControls, useProgress } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Physics } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
+import { Suspense } from 'react';
 
 const App = () => {
-  const { active } = useProgress();
   const controls = useLevaControls('General', {
     color: 'black',
     debugPhysics: false,
@@ -57,7 +57,11 @@ const App = () => {
           <Bloom intensity={1.8} luminanceThreshold={0.02} luminanceSmoothing={0.95} mipmapBlur />
         </EffectComposer>
         <Physics debug={controls.debugPhysics}>
-          <KeyboardControlMapping>{active ? <Loader /> : <Experience />}</KeyboardControlMapping>
+          <KeyboardControlMapping>
+            <Suspense fallback={<Loader />}>
+              <Experience />
+            </Suspense>
+          </KeyboardControlMapping>
         </Physics>
         {controls.enableOrbitControls && <OrbitControls makeDefault />}
       </Canvas>

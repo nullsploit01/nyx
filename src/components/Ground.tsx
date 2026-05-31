@@ -15,11 +15,11 @@ const Ground = () => {
   });
 
   const texture = useTexture({
-    displacementMap: '/textures/grass/grass_displacement.png',
-    normalMap: '/textures/grass/grass_normal.png',
-    roughnessMap: '/textures/grass/grass_roughness.png',
-    map: '/textures/grass/grass_color.png',
-    aoMap: '/textures/grass/grass_ao.png',
+    displacementMap: '/textures/grass/grass_displacement.webp',
+    normalMap: '/textures/grass/grass_normal.webp',
+    roughnessMap: '/textures/grass/grass_roughness.webp',
+    map: '/textures/grass/grass_color.webp',
+    aoMap: '/textures/grass/grass_ao.webp',
   });
 
   Object.values(texture).forEach((tex) => {

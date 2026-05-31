@@ -51,6 +51,7 @@ const Experience = () => {
 };
 
 useGLTF.preload('./models/pine_tree/pine_tree.glb');
+useGLTF.preload('./models/pin_location/pin_location.glb');
 useGLTF.preload('./models/oak_tree/oak_tree.glb');
 useGLTF.preload('./models/echo_house/echo_house.glb');
 useGLTF.preload('./models/ghost/ghost.glb');
@@ -58,10 +59,12 @@ useGLTF.preload('./models/telescope/telescope.glb');
 useGLTF.preload('./models/camp_fire/camp_fire.glb');
 useGLTF.preload('./models/lantern/lantern.glb');
 useGLTF.preload('./models/chair/chair.glb');
-useTexture.preload('/textures/grass/grass_displacement.png');
-useTexture.preload('/textures/grass/grass_normal.png');
-useTexture.preload('/textures/grass/grass_roughness.png');
-useTexture.preload('/textures/grass/grass_color.png');
-useTexture.preload('/textures/grass/grass_ao.png');
+useTexture.preload('/textures/grass/grass_displacement.webp');
+useTexture.preload('/textures/grass/grass_normal.webp');
+useTexture.preload('/textures/grass/grass_roughness.webp');
+useTexture.preload('/textures/grass/grass_color.webp');
+useTexture.preload('/textures/grass/grass_ao.webp');
+useTexture.preload('./textures/earth/8081_earthlights4k.webp');
+useTexture.preload('./textures/earth/8081_earthbump4k.webp');
 
 export default Experience;
