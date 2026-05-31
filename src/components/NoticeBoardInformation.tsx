@@ -172,7 +172,7 @@ const NoticeBoardInformation = ({
             parameters may vary.
           </span>
           <button
-            onClick={() => {}}
+            onClick={() => window.open('https://github.com/nullsploit01/nyx', '_blank')}
             style={{
               background: 'transparent',
               color: '#94a3b8',
