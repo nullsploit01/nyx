@@ -1,4 +1,5 @@
 import { useLevaControls } from '../hooks/useLevaControls';
+import { useTwoFingerTap } from '../hooks/useTwoFingerTap';
 import { useGlobeStore } from '../stores/globeStore';
 import { CameraControls, Html, useCursor, useGLTF } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
@@ -9,6 +10,26 @@ const Telescope = () => {
   const [hovered, setHovered] = useState(false);
   const setTelescopeMode = useGlobeStore((state) => state.setTelescopeMode);
   const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
+  useEffect(() => {
+    if (!telescopeMode) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTelescopeMode(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [telescopeMode, setTelescopeMode]);
+
+  useTwoFingerTap(telescopeMode, () => setTelescopeMode(false));
 
   const controls = useLevaControls('Telescope', {
     position: {
