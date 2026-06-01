@@ -4,6 +4,8 @@ attribute float hasRing;
 varying vec3 vColor;
 varying float vHasRing;
 
+uniform float telescopeZoom;
+
 void main() {
     vColor = color;
     vHasRing = hasRing;
@@ -17,6 +19,6 @@ void main() {
         mvPosition;
 
     gl_PointSize =
-        size *
+        size * telescopeZoom *
         (300.0 / -mvPosition.z);
 }

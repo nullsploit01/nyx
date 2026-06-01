@@ -62,3 +62,12 @@ export type VisibleStar = {
   radialVelocity: number;
   worldPosition: Vector3;
 };
+
+export type VisiblePlanet = {
+  name: string;
+  magnitude: number;
+  distanceKm: number;
+  color: string;
+  worldPosition: THREE.Vector3;
+  hasRing: boolean;
+};

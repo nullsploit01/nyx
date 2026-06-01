@@ -157,7 +157,7 @@ const Telescope = () => {
           truckSpeed={0}
           dollySpeed={0}
           polarRotateSpeed={0.08}
-          azimuthRotateSpeed={0.18}
+          azimuthRotateSpeed={0.58}
           minPolarAngle={0.8}
           maxPolarAngle={3.4}
         />

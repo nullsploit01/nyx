@@ -123,10 +123,6 @@ const StarField = ({ elevation, date, stars }: Props) => {
         star;
       const horizontal = Astronomy.Horizon(time, observer, ra * 15, dec, 'normal');
 
-      if (horizontal.altitude < 0) {
-        return;
-      }
-
       const [x, y, z] = altAzToXYZ(horizontal.altitude, horizontal.azimuth, 500);
       positions.push(x, y, z);
       const color = colorFromCI(ci);
