@@ -1,9 +1,12 @@
 import { useLevaControls } from '../hooks/useLevaControls';
+import { useGlobeStore } from '../stores/globeStore';
 import { useGLTF } from '@react-three/drei';
 import { useEffect } from 'react';
 import { Mesh } from 'three';
 
 const Camp = () => {
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
   const controls = useLevaControls('Camp', {
     position: [-2, 1.2, 25] as [number, number, number],
     rotation: [0, 1.5, 0] as [number, number, number],
@@ -23,9 +26,11 @@ const Camp = () => {
 
   return (
     <>
-      <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
-        <primitive object={model.scene} />
-      </group>
+      {!telescopeMode && (
+        <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
+          <primitive object={model.scene} />
+        </group>
+      )}
     </>
   );
 };

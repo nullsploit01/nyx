@@ -1,9 +1,12 @@
 import { useLevaControls } from '../hooks/useLevaControls';
+import { useGlobeStore } from '../stores/globeStore';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect } from 'react';
 import { Mesh } from 'three';
 
 const Lantern = () => {
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
   const model = useGLTF('./models/lantern/lantern_compressed.glb');
   const animations = useAnimations(model.animations, model.scene);
 
@@ -39,10 +42,18 @@ const Lantern = () => {
 
   return (
     <>
-      <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
-        <primitive object={model.scene} />
-        <pointLight intensity={100} distance={10} decay={2} color="#ff9e57" position={[0, 97, 0]} />
-      </group>
+      {!telescopeMode && (
+        <group position={controls.position} rotation={controls.rotation} scale={controls.scale}>
+          <primitive object={model.scene} />
+          <pointLight
+            intensity={100}
+            distance={10}
+            decay={2}
+            color="#ff9e57"
+            position={[0, 97, 0]}
+          />
+        </group>
+      )}
     </>
   );
 };

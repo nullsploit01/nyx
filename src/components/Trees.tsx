@@ -1,7 +1,10 @@
+import { useGlobeStore } from '../stores/globeStore';
 import PineTree from './PineTree';
 import { useMemo } from 'react';
 
 const Trees = () => {
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
   const trees = useMemo(() => {
     const result = [];
 
@@ -30,14 +33,15 @@ const Trees = () => {
 
   return (
     <>
-      {trees.map((tree, index) => (
-        <PineTree
-          key={index}
-          position={tree.position}
-          rotation={tree.rotation}
-          scale={tree.scale}
-        />
-      ))}
+      {!telescopeMode &&
+        trees.map((tree, index) => (
+          <PineTree
+            key={index}
+            position={tree.position}
+            rotation={tree.rotation}
+            scale={tree.scale}
+          />
+        ))}
     </>
   );
 };

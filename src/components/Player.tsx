@@ -33,29 +33,31 @@ const Player = () => {
 
   return (
     <>
-      <Ecctrl
-        camCollision={false}
-        camInitDis={-0.01}
-        camMinDis={-0.01}
-        camFollowMult={telescopeMode ? 0 : 1000}
-        camLerpMult={telescopeMode ? 0 : 1000}
-        turnVelMultiplier={1}
-        turnSpeed={10}
-        mode="PointToMove"
-        maxVelLimit={40}
-        disableFollowCam={controls.disableControls || telescopeMode}
-        disableControl={controls.disableControls || telescopeMode}
-        jumpVel={0}
-        camTargetPos={{ x: 0, y: 10, z: 0 }}
-        camInitDir={{ x: 0, y: Math.PI }}
-      >
-        <RigidBody position={controls.position} rotation={controls.rotation}>
-          <group visible={false} scale={controls.scale}>
-            <primitive object={model.scene} />
-          </group>
-          <CuboidCollider args={[0.2, 0.1, 0.3]} />
-        </RigidBody>
-      </Ecctrl>
+      {!telescopeMode && (
+        <Ecctrl
+          camCollision={false}
+          camInitDis={-0.01}
+          camMinDis={-0.01}
+          camFollowMult={telescopeMode ? 0 : 1000}
+          camLerpMult={telescopeMode ? 0 : 1000}
+          turnVelMultiplier={1}
+          turnSpeed={10}
+          mode="PointToMove"
+          maxVelLimit={40}
+          disableFollowCam={controls.disableControls || telescopeMode}
+          disableControl={controls.disableControls || telescopeMode}
+          jumpVel={0}
+          camTargetPos={{ x: 0, y: 10, z: 0 }}
+          camInitDir={{ x: 0, y: Math.PI }}
+        >
+          <RigidBody position={controls.position} rotation={controls.rotation}>
+            <group visible={false} scale={controls.scale}>
+              <primitive object={model.scene} />
+            </group>
+            <CuboidCollider args={[0.2, 0.1, 0.3]} />
+          </RigidBody>
+        </Ecctrl>
+      )}
     </>
   );
 };

@@ -1,5 +1,6 @@
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useLevaControls } from '../hooks/useLevaControls';
+import { useGlobeStore } from '../stores/globeStore';
 import Grass from './Grass';
 import { useTexture } from '@react-three/drei';
 import { CuboidCollider, RigidBody } from '@react-three/rapier';
@@ -8,6 +9,7 @@ import { useMemo, useRef } from 'react';
 import { DoubleSide, NoColorSpace, RepeatWrapping, SRGBColorSpace, Vector2 } from 'three';
 
 const Ground = () => {
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
   const isMobile = useIsMobile();
   const controls = useLevaControls('Ground', {
     position: [0, 0, 0] as [number, number, number],
@@ -60,65 +62,69 @@ const Ground = () => {
 
   return (
     <>
-      <RigidBody type="fixed">
-        <mesh
-          onPointerDown={() => {
-            date.current = Date.now();
-          }}
-          onPointerUp={({ point }) => {
-            const wasClick = Date.now() - date.current < 200;
-            if (!wasClick || !isMobile) {
-              return;
-            }
+      {!telescopeMode && (
+        <>
+          <RigidBody type="fixed">
+            <mesh
+              onPointerDown={() => {
+                date.current = Date.now();
+              }}
+              onPointerUp={({ point }) => {
+                const wasClick = Date.now() - date.current < 200;
+                if (!wasClick || !isMobile) {
+                  return;
+                }
 
-            setMoveToPoint({
-              x: point.x,
-              y: 0,
-              z: point.z,
-            } as never);
-          }}
-          position={controls.position}
-          rotation={controls.rotation}
-          receiveShadow
-        >
-          <circleGeometry args={[125, 128]} />
-          <meshStandardMaterial
-            displacementScale={0.4}
-            roughness={1}
-            metalness={0}
-            {...grassTexture}
-            side={DoubleSide}
-          />
-        </mesh>
-        <CuboidCollider args={[120, 0.1, 120]} />
-      </RigidBody>
-      <mesh position={[70, 0.01, 10]}>
-        <boxGeometry args={[95, 1, 25]} />
-        <meshStandardMaterial
-          displacementScale={0.05}
-          normalScale={new Vector2(1.5, 1.5)}
-          roughness={0.9}
-          metalness={0.0}
-          {...rocksTexture}
-          side={DoubleSide}
-        />
-      </mesh>
+                setMoveToPoint({
+                  x: point.x,
+                  y: 0,
+                  z: point.z,
+                } as never);
+              }}
+              position={controls.position}
+              rotation={controls.rotation}
+              receiveShadow
+            >
+              <circleGeometry args={[125, 128]} />
+              <meshStandardMaterial
+                displacementScale={0.4}
+                roughness={1}
+                metalness={0}
+                {...grassTexture}
+                side={DoubleSide}
+              />
+            </mesh>
+            <CuboidCollider args={[120, 0.1, 120]} />
+          </RigidBody>
+          <mesh position={[70, 0.01, 10]}>
+            <boxGeometry args={[95, 1, 25]} />
+            <meshStandardMaterial
+              displacementScale={0.05}
+              normalScale={new Vector2(1.5, 1.5)}
+              roughness={0.9}
+              metalness={0.0}
+              {...rocksTexture}
+              side={DoubleSide}
+            />
+          </mesh>
 
-      {!controls.disableGrass && !isMobile && (
-        <Grass
-          ignoreZones={[
-            //Pathway
-            {
-              position: [70, 1, 10],
-              args: [95, 1, 25],
-            },
-            //Camp
-            {
-              position: [-28.5, 1.2, -25],
-              args: [45, 1, 45],
-            },
-          ]}
-        />
+          {!controls.disableGrass && !isMobile && (
+            <Grass
+              ignoreZones={[
+                //Pathway
+                {
+                  position: [70, 1, 10],
+                  args: [95, 1, 25],
+                },
+                //Camp
+                {
+                  position: [-28.5, 1.2, -25],
+                  args: [45, 1, 45],
+                },
+              ]}
+            />
+          )}
+        </>
       )}
     </>
   );

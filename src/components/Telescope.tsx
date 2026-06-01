@@ -12,7 +12,7 @@ import {
   useGLTF,
 } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
-import { Euler, Vector3 } from 'three';
+import { Euler, Group as ThreeGroup, Vector3 } from 'three';
 
 const Telescope = () => {
   const isMobile = useIsMobile();
@@ -21,6 +21,9 @@ const Telescope = () => {
   const [hovered, setHovered] = useState(false);
   const setTelescopeMode = useGlobeStore((state) => state.setTelescopeMode);
   const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
+  const model = useGLTF('./models/telescope/telescope_compressed.glb');
+  useCursor(hovered, 'pointer');
 
   useEffect(() => {
     if (!telescopeMode) {
@@ -63,46 +66,32 @@ const Telescope = () => {
   });
 
   const cameraControlsRef = useRef<CameraControls>(null);
+  const groupRef = useRef<ThreeGroup>(null);
 
   useEffect(() => {
     if (!telescopeMode || !cameraControlsRef.current) {
       return;
     }
 
-    const position = new Vector3(
-      controls.position[0],
-      controls.position[1] + 40,
-      controls.position[2],
-    );
+    const posX = controls.position[0];
+    const posY = controls.position[1];
+    const posZ = controls.position[2];
 
     const forward = new Vector3(0, 0, -1);
-
     forward.applyEuler(
       new Euler(controls.rotation[0], controls.rotation[1], controls.rotation[2], 'YXZ'),
     );
 
-    const target = position.clone().add(forward.multiplyScalar(100));
+    const target = new Vector3(posX, posY, posZ).add(forward.clone().multiplyScalar(100));
+    cameraControlsRef.current.setLookAt(posX, posY, posZ, target.x, target.y, target.z, false);
 
-    cameraControlsRef.current.setLookAt(
-      position.x,
-      position.y,
-      position.z,
+    cameraControlsRef.current.dollyTo(0.1, false);
+  }, [telescopeMode, controls.position, controls.rotation]);
 
-      target.x,
-      target.y,
-      target.z,
-
-      true,
-    );
-
-    cameraControlsRef.current.dollyTo(0.001, false);
-  }, [telescopeMode]);
-
-  const model = useGLTF('./models/telescope/telescope_compressed.glb');
-  useCursor(hovered, 'pointer');
   return (
     <>
       <group
+        ref={groupRef}
         visible={!telescopeMode}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
@@ -156,22 +145,23 @@ const Telescope = () => {
             </div>
           </Html>
         )}
-        {telescopeMode && (
-          <CameraControls
-            ref={cameraControlsRef}
-            enabled={telescopeMode}
-            smoothTime={1.2}
-            minDistance={0.1}
-            maxDistance={0.1}
-            truckSpeed={0}
-            dollySpeed={0}
-            polarRotateSpeed={0.08}
-            azimuthRotateSpeed={0.18}
-            minPolarAngle={0.8}
-            maxPolarAngle={3.4}
-          />
-        )}
       </group>
+
+      {telescopeMode && (
+        <CameraControls
+          ref={cameraControlsRef}
+          enabled={telescopeMode}
+          smoothTime={1.2}
+          minDistance={0.1}
+          maxDistance={0.1}
+          truckSpeed={0}
+          dollySpeed={0}
+          polarRotateSpeed={0.08}
+          azimuthRotateSpeed={0.18}
+          minPolarAngle={0.8}
+          maxPolarAngle={3.4}
+        />
+      )}
 
       {hint && telescopeMode && (
         <Hud>

@@ -72,7 +72,7 @@ const Globe = () => {
     }
 
     if (!isCameraMoving && !location) {
-      globeRef.current.rotation.y += delta * 0.02;
+      globeRef.current.rotation.y += delta * 0.007;
     }
 
     if (!introDone) {

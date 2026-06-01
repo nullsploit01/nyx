@@ -6,6 +6,8 @@ import { useCursor, useGLTF } from '@react-three/drei';
 import { useMemo, useState } from 'react';
 
 const NoticeBoard = () => {
+  const telescopeMode = useGlobeStore((state) => state.telescopeMode);
+
   const [showBoardMessage, setShowBoardMessage] = useState(false);
   const model = useGLTF('./models/notice_board/notice_board_compressed.glb');
   const [isHovered, setIsHovered] = useState(false);
@@ -33,25 +35,27 @@ const NoticeBoard = () => {
 
   return (
     <>
-      <group
-        position={controls.position}
-        rotation={controls.rotation}
-        onPointerOver={() => setIsHovered(true)}
-        onPointerOut={() => setIsHovered(false)}
-        onClick={() => {
-          setShowBoardMessage(!showBoardMessage);
-        }}
-      >
-        {showBoardMessage && location && (
-          <NoticeBoardInformation
-            onClick={() => setShowBoardMessage(false)}
-            location={location}
-            locationTime={locationTime}
-          />
-        )}
+      {!telescopeMode && (
+        <group
+          position={controls.position}
+          rotation={controls.rotation}
+          onPointerOver={() => setIsHovered(true)}
+          onPointerOut={() => setIsHovered(false)}
+          onClick={() => {
+            setShowBoardMessage(!showBoardMessage);
+          }}
+        >
+          {showBoardMessage && location && (
+            <NoticeBoardInformation
+              onClick={() => setShowBoardMessage(false)}
+              location={location}
+              locationTime={locationTime}
+            />
+          )}
 
-        <primitive object={model.scene} scale={controls.scale} />
-      </group>
+          <primitive object={model.scene} scale={controls.scale} />
+        </group>
+      )}
     </>
   );
 };
