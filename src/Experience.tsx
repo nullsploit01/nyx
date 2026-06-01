@@ -1,6 +1,7 @@
 import Globe from './components/Globe';
 import Ground from './components/Ground';
 import Moon from './components/Moon';
+import Planets from './components/Planets';
 import Player from './components/Player';
 import Props from './components/Props';
 import StarField from './components/StarField';
@@ -43,6 +44,7 @@ const Experience = () => {
           <Ground />
           <Props />
           <Player />
+          <Planets {...testData} />
           <StarField stars={stars} {...testData} />
         </>
       )}
