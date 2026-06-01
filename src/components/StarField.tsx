@@ -22,6 +22,7 @@ type Props = {
 const StarField = ({ elevation, date, stars }: Props) => {
   const controls = useLevaControls('StarField', {
     telescopeFov: 40,
+    defaultZoom: 10,
   });
 
   const coords = useGlobeStore((state) => state.coords);
@@ -65,7 +66,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
     if (materialRef.current) {
       materialRef.current.uniforms.telescopeZoom.value = THREE.MathUtils.lerp(
         materialRef.current.uniforms.telescopeZoom.value,
-        telescopeMode ? 40 : 1,
+        telescopeMode ? 70 : controls.defaultZoom,
         0.08,
       );
     }
@@ -169,7 +170,7 @@ const StarField = ({ elevation, date, stars }: Props) => {
           ref={materialRef}
           uniforms={{
             telescopeZoom: {
-              value: 1,
+              value: controls.defaultZoom,
             },
           }}
           transparent
