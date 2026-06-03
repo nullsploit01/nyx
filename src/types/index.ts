@@ -68,6 +68,6 @@ export type VisiblePlanet = {
   magnitude: number;
   distanceKm: number;
   color: string;
-  worldPosition: THREE.Vector3;
+  worldPosition: Vector3;
   hasRing: boolean;
 };
