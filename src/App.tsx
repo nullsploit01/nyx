@@ -37,7 +37,6 @@ const App = () => {
       }}
     >
       <Canvas
-        frameloop="demand"
         shadows
         camera={{
           position: [0, 7, 3],
