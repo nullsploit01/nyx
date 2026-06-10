@@ -60,7 +60,7 @@ const App = () => {
         <EffectComposer>
           <Bloom intensity={1.8} luminanceThreshold={0.02} luminanceSmoothing={0.95} mipmapBlur />
         </EffectComposer>
-        <Physics debug={controls.debugPhysics}>
+        <Physics timeStep="vary" debug={controls.debugPhysics}>
           <KeyboardControlMapping>
             <Suspense fallback={<Loader />}>
               <Experience />
